@@ -1,13 +1,15 @@
-public class Zone {
-    int zoneId;
-    String zoneName;
-    double waterLevel;
-    int sosCount;
-    double infraStress;
-    double riskScore;
-    boolean isCritical;
+package city;
 
-    Zone(int zoneId, String zoneName) {
+public class Zone {
+    public int zoneId;
+    public String zoneName;
+    public double waterLevel;
+    public int sosCount;
+    public double infraStress;
+    public double riskScore;
+    public boolean isCritical;
+
+    public Zone(int zoneId, String zoneName) {
         this.zoneId = zoneId;
         this.zoneName = zoneName;
         this.waterLevel = 0.0;
@@ -17,7 +19,7 @@ public class Zone {
         this.isCritical = false;
     }
 
-    void printStatus() {
+    public void printStatus() {
         System.out.println("-----------------------------");
         System.out.println("Zone        : " + zoneName);
         System.out.println("Water Level : " + waterLevel + " m");
