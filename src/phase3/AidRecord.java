@@ -2,11 +2,11 @@ package phase3;
 
 public class AidRecord
 {
-    int zoneId;
-    double damageLevel;
-    int aidReceived;
-    int timeIgnored;
-    double vulnerabilityBonus;
+    public int zoneId;
+    public double damageLevel;
+    public int aidReceived;
+    public int timeIgnored;
+    public double vulnerabilityBonus;
 
     public AidRecord(int zoneId, double damageLevel)
     {
