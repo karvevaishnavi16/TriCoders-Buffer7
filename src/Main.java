@@ -1,8 +1,8 @@
 import java.util.*;
+import phase3.AidRecord;
+import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
-import phase3.AidRecord;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -56,5 +56,21 @@ public class Main {
         r1.printRecord();
         r2.printRecord();
         r3.printRecord();
-    }
-}
+
+        //Citygraph test
+        CityGraph graph = new CityGraph();
+
+         graph.addZone(1);
+         graph.addZone(2);
+         graph.addZone(3);
+
+         graph.addConnection(1, 2);
+         graph.addConnection(2, 3);
+
+         graph.printGraph();
+
+        
+   }
+}              
+
+
