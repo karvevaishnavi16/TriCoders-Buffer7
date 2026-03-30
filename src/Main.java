@@ -1,16 +1,44 @@
-import phase3.AidRecord;
+import java.util.*;
 import city.Zone;
+import phase1.SignalSimulator;
+import phase3.AidRecord;
 
-public class Main
-{
-   public static void main(String[] args)
-   {
-        // AidRecord test
+public class Main {
+    public static void main(String[] args) {
+
+      //zone
+      Map<String, Zone> zones = new HashMap<>();
+
+        zones.put("A", new Zone(1, "A"));
+        zones.put("B", new Zone(2, "B"));
+        zones.put("C", new Zone(3, "C"));
+        zones.put("D", new Zone(4, "D"));
+        zones.put("E", new Zone(5, "E"));
+        zones.put("F", new Zone(6, "F"));
+        zones.put("G", new Zone(7, "G"));
+        zones.put("H", new Zone(8, "H"));
+        zones.put("I", new Zone(9, "I"));
+        zones.put("J", new Zone(10, "J"));
+
+        SignalSimulator sim = new SignalSimulator();
+
+        sim.runSimulation(
+            "C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv",
+            zones
+        );
+        System.out.println("\nFinal Zone Status:");
+
+        for (Zone z : zones.values()) {
+            z.printStatus();
+        }
+
+
+       //aidRecord
         AidRecord r1 = new AidRecord(1, 75.5);
         AidRecord r2 = new AidRecord(2, 50.0);
         AidRecord r3 = new AidRecord(3, 90.2);
 
-        System.out.println("Initial Records:");
+        System.out.println("\nInitial Aid Records:");
         r1.printRecord();
         r2.printRecord();
         r3.printRecord();
@@ -24,17 +52,9 @@ public class Main
         r3.aidReceived = 7;
         r3.timeIgnored = 4;
 
-        System.out.println("\nUpdated Records:");
+        System.out.println("\nUpdated Aid Records:");
         r1.printRecord();
         r2.printRecord();
         r3.printRecord();
-
-        // Zone test 
-        Zone z = new Zone(1, "Zone A");
-        z.waterLevel = 8.4;
-        z.sosCount = 38;
-        z.infraStress = 1.3;
-        z.printStatus();
-   }
-}              
-
+    }
+}

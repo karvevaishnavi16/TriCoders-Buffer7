@@ -3,7 +3,7 @@ package city;
 public class Zone {
     public int zoneId;
     public String zoneName;
-    public double waterLevel;
+    public double environmentalLevel;
     public int sosCount;
     public double infraStress;
     public double riskScore;
@@ -12,7 +12,7 @@ public class Zone {
     public Zone(int zoneId, String zoneName) {
         this.zoneId = zoneId;
         this.zoneName = zoneName;
-        this.waterLevel = 0.0;
+        this.environmentalLevel = 0.0;
         this.sosCount = 0;
         this.infraStress = 1.0;
         this.riskScore = 0.0;
@@ -22,7 +22,7 @@ public class Zone {
     public void printStatus() {
         System.out.println("-----------------------------");
         System.out.println("Zone        : " + zoneName);
-        System.out.println("Water Level : " + waterLevel + " m");
+        System.out.println("Environmental Level : " + environmentalLevel + " m");
         System.out.println("SOS Count   : " + sosCount + " reports");
         System.out.println("Infra Stress: " + infraStress + "x normal");
         System.out.println("Risk Score  : " + riskScore);
