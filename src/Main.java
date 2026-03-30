@@ -1,4 +1,5 @@
 import phase3.AidRecord;
+import city.CityGraph;
 import city.Zone;
 
 public class Main
@@ -35,6 +36,20 @@ public class Main
         z.sosCount = 38;
         z.infraStress = 1.3;
         z.printStatus();
+
+        //Citygraph test
+        CityGraph graph = new CityGraph();
+
+         graph.addZone(1);
+         graph.addZone(2);
+         graph.addZone(3);
+
+         graph.addConnection(1, 2);
+         graph.addConnection(2, 3);
+
+         graph.printGraph();
+
+        
    }
 }              
 
