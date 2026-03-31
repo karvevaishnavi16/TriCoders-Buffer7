@@ -17,11 +17,9 @@ public class SignalSimulator {
             while ((line = br.readLine()) != null) {
 
                 String[] data = line.split(",");
-
+                String zoneId = data[1].trim();
                 int tick = Integer.parseInt(data[0]);
-                String zoneId = data[1].trim(); // IMPORTANT: remove spaces
-
-                double environmentalLevel = Double.parseDouble(data[2]);
+                double environmentalSignal = Double.parseDouble(data[2]);
                 int sos = Integer.parseInt(data[3]);
                 double infra = Double.parseDouble(data[4]);
 
@@ -35,10 +33,10 @@ public class SignalSimulator {
                 }
 
                 // Update values
-                z.environmentalLevel = environmentalLevel;
+                z.environmentalSignal = environmentalSignal;
                 z.sosCount = sos;
                 z.infraStress = infra;
-
+                z.evaluateRisk();
                 System.out.println("Tick " + tick + " updated Zone " + zoneId);
             }
 

@@ -32,6 +32,14 @@ public class Main {
             z.printStatus();
         }
 
+        System.out.println("\nCritical Zones:");
+
+        for (Map.Entry<String, Zone> entry : zones.entrySet()) {
+        if (entry.getValue().isCritical) 
+        {
+            System.out.println(entry.getKey());
+        }
+        }
 
        //aidRecord
         AidRecord r1 = new AidRecord(1, 75.5);
