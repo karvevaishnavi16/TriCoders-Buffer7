@@ -55,4 +55,5 @@ public class Zone {
         System.out.println("Status      : " + (isCritical ? "CRITICAL" : "NORMAL"));
         System.out.println("-----------------------------");
     }
+    //print
 }
