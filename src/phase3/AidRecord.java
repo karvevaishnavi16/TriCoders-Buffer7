@@ -7,6 +7,7 @@ public class AidRecord
     public int aidReceived;
     public int timeIgnored;
     public double vulnerabilityBonus;
+    public double neglectMultiplier;
 
     public AidRecord(int zoneId, double damageLevel)
     {
@@ -15,6 +16,7 @@ public class AidRecord
         this.aidReceived = 0;
         this.timeIgnored = 0;
         this.vulnerabilityBonus = 0;
+        this.neglectMultiplier=1.0;
     }
 
     public void printRecord()
@@ -24,7 +26,8 @@ public class AidRecord
             ", Damage Level: " + damageLevel +
             ", Aid Received: " + aidReceived +
             ", Time Ignored: " + timeIgnored +
-            ", Vulnerability Bonus: " + vulnerabilityBonus
+            ", Vulnerability Bonus: " + vulnerabilityBonus +
+            ", Priority of ignored zone:" + neglectMultiplier
         );
     }
 }

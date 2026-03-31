@@ -65,6 +65,8 @@ public class Main {
         r2.printRecord();
         r3.printRecord();
 
+
+
         CityGraph graph = new CityGraph();
 
         // Add zones (nodes)
