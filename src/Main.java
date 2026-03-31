@@ -1,17 +1,52 @@
+import java.util.*;
 import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
+import phase1.SignalSimulator;
+public class Main {
+    public static void main(String[] args) {
 
-public class Main
-{
-   public static void main(String[] args)
-   {
-        // AidRecord test
+      //zone
+      Map<String, Zone> zones = new HashMap<>();
+
+        zones.put("A", new Zone(1, "A"));
+        zones.put("B", new Zone(2, "B"));
+        zones.put("C", new Zone(3, "C"));
+        zones.put("D", new Zone(4, "D"));
+        zones.put("E", new Zone(5, "E"));
+        zones.put("F", new Zone(6, "F"));
+        zones.put("G", new Zone(7, "G"));
+        zones.put("H", new Zone(8, "H"));
+        zones.put("I", new Zone(9, "I"));
+        zones.put("J", new Zone(10, "J"));
+
+        SignalSimulator sim = new SignalSimulator();
+
+        sim.runSimulation(
+            "C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv",
+            zones
+        );
+        System.out.println("\nFinal Zone Status:");
+
+        for (Zone z : zones.values()) {
+            z.printStatus();
+        }
+
+        System.out.println("\nCritical Zones:");
+
+        for (Map.Entry<String, Zone> entry : zones.entrySet()) {
+        if (entry.getValue().isCritical) 
+        {
+            System.out.println(entry.getKey());
+        }
+        }
+
+       //aidRecord
         AidRecord r1 = new AidRecord(1, 75.5);
         AidRecord r2 = new AidRecord(2, 50.0);
         AidRecord r3 = new AidRecord(3, 90.2);
 
-        System.out.println("Initial Records:");
+        System.out.println("\nInitial Aid Records:");
         r1.printRecord();
         r2.printRecord();
         r3.printRecord();
@@ -25,11 +60,12 @@ public class Main
         r3.aidReceived = 7;
         r3.timeIgnored = 4;
 
-        System.out.println("\nUpdated Records:");
+        System.out.println("\nUpdated Aid Records:");
         r1.printRecord();
         r2.printRecord();
         r3.printRecord();
 
+<<<<<<< HEAD
         // Zone test 
         Zone z = new Zone(1, "Zone A");
         z.waterLevel = 8.4;
@@ -38,6 +74,9 @@ public class Main
         z.printStatus();
 
          // Create graph
+=======
+        //Citygraph test
+>>>>>>> 29cabc38d57910ba898718ab934ef5319bd5da61
         CityGraph graph = new CityGraph();
 
         // Add zones (nodes)
@@ -60,4 +99,10 @@ public class Main
         System.out.println("\nShortest Paths:");
         graph.shortestPath("A");
    }
+<<<<<<< HEAD
 }
+=======
+}              
+
+
+>>>>>>> 29cabc38d57910ba898718ab934ef5319bd5da61
