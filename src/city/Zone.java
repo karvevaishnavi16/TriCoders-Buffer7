@@ -19,41 +19,25 @@ public class Zone {
         this.isCritical = false;
     }
 
-    public void evaluateRisk()
-    {
-        int abnormalCount=0;
-        // Check environmental condition
-        if(environmentalSignal > 7.0)
-        {
-            abnormalCount++;
-        }
-        // Check SOS level
-        if(sosCount> 20)
-        {
-            abnormalCount++;
-        }
-        if(infraStress > 1.5)
-        {
-            abnormalCount++;
-        }
-        //assign risk score
-        riskScore = abnormalCount;
+    public void evaluateRisk() {
+        int flagCount = 0;
 
-         if (abnormalCount >= 2) {
-        isCritical = true;
-    } else {
-        isCritical = false;
+        if (environmentalSignal > 7.0) flagCount++;
+        if (sosCount > 30) flagCount++;
+        if (infraStress > 2.0) flagCount++;
+
+        riskScore = flagCount;
+        isCritical = (flagCount >= 2);
     }
-    }
+
     public void printStatus() {
         System.out.println("-----------------------------");
         System.out.println("Zone        : " + zoneName);
-        System.out.println("Environmental Level : " + environmentalSignal + " m");
+        System.out.println("Env Signal  : " + environmentalSignal);
         System.out.println("SOS Count   : " + sosCount + " reports");
         System.out.println("Infra Stress: " + infraStress + "x normal");
         System.out.println("Risk Score  : " + riskScore);
-        System.out.println("Status      : " + (isCritical ? "CRITICAL" : "NORMAL"));
+        System.out.println("Status      : " + (isCritical ? "!!! CRITICAL !!!" : "NORMAL"));
         System.out.println("-----------------------------");
     }
-    //print
 }
