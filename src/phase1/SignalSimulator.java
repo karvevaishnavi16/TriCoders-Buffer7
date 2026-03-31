@@ -11,22 +11,35 @@ public class SignalSimulator {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
+            int lastTick = -1;
 
             br.readLine(); // skip header
 
             while ((line = br.readLine()) != null) {
 
+                // Fix 1 — skip empty lines
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
                 String[] data = line.split(",");
+
+                // Fix 2 — skip incomplete rows
+                if (data.length < 5) continue;
+
+                int tick = Integer.parseInt(data[0].trim());
                 String zoneId = data[1].trim();
-                int tick = Integer.parseInt(data[0]);
-                double environmentalSignal = Double.parseDouble(data[2]);
-                int sos = Integer.parseInt(data[3]);
-                double infra = Double.parseDouble(data[4]);
+                double environmentalSignal = Double.parseDouble(data[2].trim());
+                int sos = Integer.parseInt(data[3].trim());
+                double infra = Double.parseDouble(data[4].trim());
+
+                // Print tick header when tick changes
+                if (tick != lastTick) {
+                    System.out.println("\n========== TICK " + tick + " ==========");
+                    lastTick = tick;
+                }
 
                 // Get zone
                 Zone z = zones.get(zoneId);
-
-                //(prevents crash)
                 if (z == null) {
                     System.out.println("Zone not found: " + zoneId);
                     continue;
@@ -37,7 +50,20 @@ public class SignalSimulator {
                 z.sosCount = sos;
                 z.infraStress = infra;
                 z.evaluateRisk();
-                System.out.println("Tick " + tick + " updated Zone " + zoneId);
+
+                // Print only if ALERT or CRITICAL
+                if (z.isCritical) {
+                    System.out.println("  !!! CRISIS DETECTED: Zone " + zoneId +
+                        " | Env: " + environmentalSignal +
+                        " | SOS: " + sos +
+                        " | Infra: " + infra +
+                        " | Risk Score: " + z.riskScore);
+                } else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
+                    System.out.println("  [ALERT] Zone " + zoneId +
+                        " | Env: " + environmentalSignal +
+                        " | SOS: " + sos +
+                        " | Infra: " + infra);
+                }
             }
 
             br.close();
