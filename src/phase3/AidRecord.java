@@ -18,6 +18,25 @@ public class AidRecord
         this.vulnerabilityBonus = 0;
         this.neglectMultiplier=1.0;
     }
+    public double getDamageLevel() {
+    return damageLevel;
+}
+
+public int getAidReceived() {
+    return aidReceived;
+}
+
+public int getTimeIgnored() {
+    return timeIgnored;
+}
+
+public double getVulnerabilityBonus() {
+    return vulnerabilityBonus;
+}
+
+public double getNeglectMultiplier() {
+    return neglectMultiplier;
+}
 
     public void printRecord()
     {

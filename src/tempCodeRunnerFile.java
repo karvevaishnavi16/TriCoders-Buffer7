@@ -3,7 +3,6 @@ import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
-import phase3.FairnessScorer;
 public class Main {
     public static void main(String[] args) {
 
@@ -24,7 +23,7 @@ public class Main {
         SignalSimulator sim = new SignalSimulator();
 
         sim.runSimulation(
-           "data/mock_data.csv",
+            "C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv",
             zones
         );
         System.out.println("\nFinal Zone Status:");
@@ -43,28 +42,28 @@ public class Main {
         }
 
        //aidRecord
-        AidRecord zoneA = new AidRecord(1, 75.5);
-        AidRecord zoneB = new AidRecord(2, 50.0);
-        AidRecord zoneC = new AidRecord(3, 90.2);
+        AidRecord r1 = new AidRecord(1, 75.5);
+        AidRecord r2 = new AidRecord(2, 50.0);
+        AidRecord r3 = new AidRecord(3, 90.2);
 
         System.out.println("\nInitial Aid Records:");
-        zoneA.printRecord();
-        zoneB.printRecord();
-        zoneC.printRecord();
+        r1.printRecord();
+        r2.printRecord();
+        r3.printRecord();
 
-        zoneA.setAidReceived(5);
-        zoneA.setTimeIgnored(2);
+        r1.aidReceived = 5;
+        r1.timeIgnored = 2;
 
-        zoneB.setAidReceived(3);
-        zoneB.setTimeIgnored(1);
+        r2.aidReceived = 3;
+        r2.timeIgnored = 1;
 
-        zoneC.setAidReceived(7);
-        zoneC.setTimeIgnored(4);
-        
+        r3.aidReceived = 7;
+        r3.timeIgnored = 4;
+
         System.out.println("\nUpdated Aid Records:");
-        zoneA.printRecord();
-        zoneB.printRecord();
-        zoneC.printRecord();
+        r1.printRecord();
+        r2.printRecord();
+        r3.printRecord();
 
 
 
@@ -89,24 +88,5 @@ public class Main {
         // Run Dijkstra
         System.out.println("\nShortest Paths:");
         graph.shortestPath("A");
-
-         // Compute scores
-        double scoreA = FairnessScorer.computeScore(zoneA);
-        double scoreB = FairnessScorer.computeScore(zoneB);
-        double scoreC = FairnessScorer.computeScore(zoneC);
-
-        // Print scores
-        FairnessScorer.printScore("Zone A", scoreA);
-        FairnessScorer.printScore("Zone B", scoreB);
-        FairnessScorer.printScore("Zone C", scoreC);
-
-        // Optional: find highest priority
-        if (scoreA >= scoreB && scoreA >= scoreC) {
-            System.out.println("Highest priority: Zone A");
-        } else if (scoreB >= scoreA && scoreB >= scoreC) {
-            System.out.println("Highest priority: Zone B");
-        } else {
-            System.out.println("Highest priority: Zone C");
-        }
    }
 }
