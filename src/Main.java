@@ -7,8 +7,8 @@ public class Main {
     public static void main(String[] args) {
 
       //zone
-      Map<String, Zone> zones = new HashMap<>();
-
+      // ── ZONES ──
+        Map<String, Zone> zones = new HashMap<>();
         zones.put("A", new Zone(1, "A"));
         zones.put("B", new Zone(2, "B"));
         zones.put("C", new Zone(3, "C"));
@@ -20,26 +20,24 @@ public class Main {
         zones.put("I", new Zone(9, "I"));
         zones.put("J", new Zone(10, "J"));
 
+        // ── SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
+        sim.runSimulation("data/mock_data.csv", zones);
 
-        sim.runSimulation(
-            "data/mock_data.csv",
-            zones
-        );
-        System.out.println("\nFinal Zone Status:");
-
+        System.out.println("\n===== FINAL ZONE STATUS =====");
         for (Zone z : zones.values()) {
             z.printStatus();
         }
 
-        System.out.println("\nCritical Zones:");
-
+        System.out.println("\n===== CRITICAL ZONES =====");
+        boolean anyCritical = false;
         for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-        if (entry.getValue().isCritical) 
-        {
-            System.out.println(entry.getKey());
+            if (entry.getValue().isCritical) {
+                System.out.println("!!! Zone " + entry.getKey() + " is CRITICAL !!!");
+                anyCritical = true;
+            }
         }
-        }
+        if (!anyCritical) System.out.println("No critical zones detected.");
 
        //aidRecord
         AidRecord r1 = new AidRecord(1, 75.5);
