@@ -19,7 +19,8 @@ public class Zone {
         this.infraStress = 1.0;
         this.riskScore = 0.0;
         this.isCritical = false;
-        this
+        this.zoneType = "RESIDENTIAL";
+        this.vulnerabilityBonus = 1.0;  
     }
       public int getZoneId() {
         return zoneId;
@@ -44,7 +45,9 @@ public class Zone {
     public double getRiskScore() {
         return riskScore;
     }
-
+    public double getVulnerabilityBonus() {
+    return vulnerabilityBonus;
+}
     public boolean isCritical() {
         return isCritical;
     }

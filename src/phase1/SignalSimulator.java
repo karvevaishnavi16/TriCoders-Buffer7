@@ -22,7 +22,8 @@ public class SignalSimulator {
                 double environmentalSignal = Double.parseDouble(data[2]);
                 int sos = Integer.parseInt(data[3]);
                 double infra = Double.parseDouble(data[4]);
-
+                String zoneType = data[5];
+                double vulnerability = Double.parseDouble(data[6]);
                 // Get zone
                 Zone z = zones.get(zoneId);
 

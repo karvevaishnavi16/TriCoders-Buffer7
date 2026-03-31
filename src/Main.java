@@ -36,14 +36,14 @@ public class Main {
         System.out.println("\nCritical Zones:");
 
         for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-        if (entry.getValue().isCritical) 
+        if (entry.getValue().isCritical()) 
         {
             System.out.println(entry.getKey());
         }
         }
 
        //aidRecord
-        AidRecord zoneA = new AidRecord(1, 75.5);
+       /* AidRecord zoneA = new AidRecord(1, 75.5);
         AidRecord zoneB = new AidRecord(2, 50.0);
         AidRecord zoneC = new AidRecord(3, 90.2);
 
@@ -60,12 +60,12 @@ public class Main {
 
         zoneC.setAidReceived(7);
         zoneC.setTimeIgnored(4);
-        
+
         System.out.println("\nUpdated Aid Records:");
         zoneA.printRecord();
         zoneB.printRecord();
         zoneC.printRecord();
-
+         */
 
 
         CityGraph graph = new CityGraph();
@@ -91,7 +91,7 @@ public class Main {
         graph.shortestPath("A");
 
          // Compute scores
-        double scoreA = FairnessScorer.computeScore(zoneA);
+        /*double scoreA = FairnessScorer.computeScore(zoneA);
         double scoreB = FairnessScorer.computeScore(zoneB);
         double scoreC = FairnessScorer.computeScore(zoneC);
 
@@ -107,6 +107,34 @@ public class Main {
             System.out.println("Highest priority: Zone B");
         } else {
             System.out.println("Highest priority: Zone C");
+        }*/
+        System.out.println("\nPriority Scores:");
+
+        for (Zone z : zones.values()) {
+
+            // Convert Zone → AidRecord
+            AidRecord record = new AidRecord(z.getZoneId(), z.getRiskScore());
+
+            // 🔹 Set vulnerability
+            record.setVulnerabilityBonus(z.getVulnerabilityBonus());
+
+            // 🔹 Simulate fairness factors
+            record.setAidReceived(2);     // you can make this dynamic later
+            record.setTimeIgnored(3);     // simulate delay
+
+            // 🔹 Neglect multiplier (IMPORTANT 🔥)
+            double neglect = 1.0 + z.getRiskScore() * 0.3;
+            if (z.isCritical()) {
+                neglect += 0.5;
+            }
+
+            record.setNeglectMultiplier(neglect);
+
+            // 🔹 Compute score
+            double score = FairnessScorer.computeScore(record);
+
+            // 🔹 Print
+            FairnessScorer.printScore(z.getZoneName(), score);
         }
    }
 }
