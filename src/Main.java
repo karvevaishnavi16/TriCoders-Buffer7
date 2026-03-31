@@ -65,7 +65,6 @@ public class Main {
         r2.printRecord();
         r3.printRecord();
 
-<<<<<<< HEAD
         // Zone test 
         Zone z = new Zone(1, "Zone A");
         z.waterLevel = 8.4;
@@ -74,9 +73,9 @@ public class Main {
         z.printStatus();
 
          // Create graph
-=======
+//=======
         //Citygraph test
->>>>>>> 29cabc38d57910ba898718ab934ef5319bd5da61
+//>>>>>>> 29cabc38d57910ba898718ab934ef5319bd5da61
         CityGraph graph = new CityGraph();
 
         // Add zones (nodes)
@@ -99,10 +98,4 @@ public class Main {
         System.out.println("\nShortest Paths:");
         graph.shortestPath("A");
    }
-<<<<<<< HEAD
 }
-=======
-}              
-
-
->>>>>>> 29cabc38d57910ba898718ab934ef5319bd5da61
