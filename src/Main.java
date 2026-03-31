@@ -67,26 +67,38 @@ public class Main {
 
 
 
+         // Create graph
         CityGraph graph = new CityGraph();
 
-        // Add zones (nodes)
+        // Add zones
         graph.addZone("A");
         graph.addZone("B");
         graph.addZone("C");
         graph.addZone("D");
+        graph.addZone("E");
 
-        // Add connections (edges with weights)
+        // Add connections (with weights)
         graph.addConnection("A", "B", 5);
         graph.addConnection("A", "C", 10);
         graph.addConnection("B", "C", 3);
+        graph.addConnection("B", "D", 7);
         graph.addConnection("C", "D", 2);
+        graph.addConnection("D", "E", 4);
 
         // Print graph
         System.out.println("Graph:");
         graph.printGraph();
 
-        // Run Dijkstra
-        System.out.println("\nShortest Paths:");
-        graph.shortestPath("A");
+        // Run Dijkstra from A
+        System.out.println("\nRunning Dijkstra from A...");
+        graph.dijkstra("A");
+
+        // Optional: test weight update
+        System.out.println("\nUpdating weight B -> D to 2...");
+        graph.updateWeight("B", "D", 2);
+
+        // Run again after update
+        System.out.println("\nRunning Dijkstra again after update...");
+        graph.dijkstra("A");
    }
 }
