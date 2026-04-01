@@ -67,7 +67,14 @@ public class SignalMonitor {
         if (deque == null || deque.isEmpty()) return 0.0;
         return deque.peekLast();
         }
-
+        
+        //window size
+        public int getWindowSize(String zoneName)
+        {
+            ArrayDeque<Double> deque = envWindow.get(zoneName);
+            if(deque==null) return 0;
+            return deque.size();
+        }
         // current readings in the window for a zone 
         public void printWindow(String zoneName) {
         System.out.println("Window for Zone " + zoneName + ":");

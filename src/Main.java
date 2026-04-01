@@ -4,11 +4,13 @@ import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
 import phase3.FairnessScorer;
+import phase1.SignalMonitor;
+
 public class Main {
     public static void main(String[] args) {
 
-      //zone
-      // ── ZONES ──
+        // zone
+        // ── ZONES ──
         Map<String, Zone> zones = new HashMap<>();
         zones.put("A", new Zone(1, "A"));
         zones.put("B", new Zone(2, "B"));
@@ -23,13 +25,11 @@ public class Main {
 
         // ── SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
-        
+
         sim.runSimulation(
-            "data/mock_data.csv",
-            zones
-        );
+                "data/mock_data.csv",
+                zones);
         System.out.println("\n===== FINAL ZONE STATUS =====");
-        
 
         for (Zone z : zones.values()) {
             z.printStatus();
@@ -43,35 +43,50 @@ public class Main {
                 anyCritical = true;
             }
         }
-        if (!anyCritical) System.out.println("No critical zones detected.");
+        if (!anyCritical)
+            System.out.println("No critical zones detected.");
 
-       //aidRecord
-       /* AidRecord zoneA = new AidRecord(1, 75.5);
-        AidRecord zoneB = new AidRecord(2, 50.0);
-        AidRecord zoneC = new AidRecord(3, 90.2);
+        // ── SIGNAL MONITOR TEST ──
+        System.out.println("\n===== SIGNAL MONITOR TEST =====");
 
-        System.out.println("\nInitial Aid Records:");
-        zoneA.printRecord();
-        zoneB.printRecord();
-        zoneC.printRecord();
+        SignalMonitor monitor = new SignalMonitor();
+        monitor.initZone("A");
+        double[] testValues = { 4.0, 5.0, 6.0, 7.0, 8.0, 8.5, 9.0 };
+        for (double val : testValues) {
+            monitor.addReading("A", val, 5, 1.2);
+            System.out.println("Added env=" + val +
+                    " | Window size: " + monitor.getWindowSize("A") +
+                    " | Latest: " + monitor.getLatestEnv("A"));
+        }
+        monitor.printWindow("A");
 
-        zoneA.setAidReceived(5);
-        zoneA.setTimeIgnored(2);
-
-        zoneB.setAidReceived(3);
-        zoneB.setTimeIgnored(1);
-
-        zoneC.setAidReceived(7);
-        zoneC.setTimeIgnored(4);
-
-        System.out.println("\nUpdated Aid Records:");
-        zoneA.printRecord();
-        zoneB.printRecord();
-        zoneC.printRecord();
+        // aidRecord
+        /*
+         * AidRecord zoneA = new AidRecord(1, 75.5);
+         * AidRecord zoneB = new AidRecord(2, 50.0);
+         * AidRecord zoneC = new AidRecord(3, 90.2);
+         * 
+         * System.out.println("\nInitial Aid Records:");
+         * zoneA.printRecord();
+         * zoneB.printRecord();
+         * zoneC.printRecord();
+         * 
+         * zoneA.setAidReceived(5);
+         * zoneA.setTimeIgnored(2);
+         * 
+         * zoneB.setAidReceived(3);
+         * zoneB.setTimeIgnored(1);
+         * 
+         * zoneC.setAidReceived(7);
+         * zoneC.setTimeIgnored(4);
+         * 
+         * System.out.println("\nUpdated Aid Records:");
+         * zoneA.printRecord();
+         * zoneB.printRecord();
+         * zoneC.printRecord();
          */
 
-
-         // Create graph
+        // Create graph
         CityGraph graph = new CityGraph();
 
         // Add zones
@@ -104,26 +119,27 @@ public class Main {
         // Run again after update
         System.out.println("\nRunning Dijkstra again after update...");
         graph.dijkstra("A");
-       
 
-         // Compute scores
-        /*double scoreA = FairnessScorer.computeScore(zoneA);
-        double scoreB = FairnessScorer.computeScore(zoneB);
-        double scoreC = FairnessScorer.computeScore(zoneC);
-
-        // Print scores
-        FairnessScorer.printScore("Zone A", scoreA);
-        FairnessScorer.printScore("Zone B", scoreB);
-        FairnessScorer.printScore("Zone C", scoreC);
-
-        // Optional: find highest priority
-        if (scoreA >= scoreB && scoreA >= scoreC) {
-            System.out.println("Highest priority: Zone A");
-        } else if (scoreB >= scoreA && scoreB >= scoreC) {
-            System.out.println("Highest priority: Zone B");
-        } else {
-            System.out.println("Highest priority: Zone C");
-        }*/
+        // Compute scores
+        /*
+         * double scoreA = FairnessScorer.computeScore(zoneA);
+         * double scoreB = FairnessScorer.computeScore(zoneB);
+         * double scoreC = FairnessScorer.computeScore(zoneC);
+         * 
+         * // Print scores
+         * FairnessScorer.printScore("Zone A", scoreA);
+         * FairnessScorer.printScore("Zone B", scoreB);
+         * FairnessScorer.printScore("Zone C", scoreC);
+         * 
+         * // Optional: find highest priority
+         * if (scoreA >= scoreB && scoreA >= scoreC) {
+         * System.out.println("Highest priority: Zone A");
+         * } else if (scoreB >= scoreA && scoreB >= scoreC) {
+         * System.out.println("Highest priority: Zone B");
+         * } else {
+         * System.out.println("Highest priority: Zone C");
+         * }
+         */
         System.out.println("\nPriority Scores:");
 
         for (Zone z : zones.values()) {
@@ -135,8 +151,8 @@ public class Main {
             record.setVulnerabilityBonus(z.getVulnerabilityBonus());
 
             // 🔹 Simulate fairness factors
-            record.setAidReceived(2);     // you can make this dynamic later
-            record.setTimeIgnored(3);     // simulate delay
+            record.setAidReceived(2); // you can make this dynamic later
+            record.setTimeIgnored(3); // simulate delay
 
             // 🔹 Neglect multiplier (IMPORTANT 🔥)
             double neglect = 1.0 + z.getRiskScore() * 0.3;
@@ -152,5 +168,5 @@ public class Main {
             // 🔹 Print
             FairnessScorer.printScore(z.getZoneName(), score);
         }
-   }
+    }
 }

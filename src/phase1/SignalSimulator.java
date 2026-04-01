@@ -19,12 +19,14 @@ public class SignalSimulator {
 
                 // Fix 1 — skip empty lines
                 line = line.trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty())
+                    continue;
 
                 String[] data = line.split(",");
 
                 // Fix 2 — skip incomplete rows
-                if (data.length < 5) continue;
+                if (data.length < 5)
+                    continue;
 
                 int tick = Integer.parseInt(data[0].trim());
                 String zoneId = data[1].trim();
@@ -55,15 +57,15 @@ public class SignalSimulator {
                 // Print only if ALERT or CRITICAL
                 if (z.isCritical) {
                     System.out.println("  !!! CRISIS DETECTED: Zone " + zoneId +
-                        " | Env: " + environmentalSignal +
-                        " | SOS: " + sos +
-                        " | Infra: " + infra +
-                        " | Risk Score: " + z.riskScore);
+                            " | Env: " + environmentalSignal +
+                            " | SOS: " + sos +
+                            " | Infra: " + infra +
+                            " | Risk Score: " + z.riskScore);
                 } else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
                     System.out.println("  [ALERT] Zone " + zoneId +
-                        " | Env: " + environmentalSignal +
-                        " | SOS: " + sos +
-                        " | Infra: " + infra);
+                            " | Env: " + environmentalSignal +
+                            " | SOS: " + sos +
+                            " | Infra: " + infra);
                 }
             }
 
