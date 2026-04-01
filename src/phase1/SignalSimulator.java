@@ -12,7 +12,7 @@ public class SignalSimulator {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
             int lastTick = -1;
-
+            boolean tickHadActivity = false;
             br.readLine(); // skip header
 
             while ((line = br.readLine()) != null) {
@@ -25,7 +25,7 @@ public class SignalSimulator {
                 String[] data = line.split(",");
 
                 // Fix 2 — skip incomplete rows
-                if (data.length < 5)
+                if (data.length < 7)
                     continue;
 
                 int tick = Integer.parseInt(data[0].trim());
@@ -33,13 +33,18 @@ public class SignalSimulator {
                 double environmentalSignal = Double.parseDouble(data[2].trim());
                 int sos = Integer.parseInt(data[3].trim());
                 double infra = Double.parseDouble(data[4].trim());
-                String zoneType = data[5];
-                double vulnerability = Double.parseDouble(data[6]);
+                String zoneType = data[5].trim();
+                double vulnerability = Double.parseDouble(data[6].trim());
 
                 // Print tick header when tick changes
                 if (tick != lastTick) {
+                    // if previous tick had no alerts or crisis — print ALL CLEAR
+                    if (lastTick != -1 && !tickHadActivity) {
+                        System.out.println("  [ALL CLEAR] All zones normal.");
+                    }
                     System.out.println("\n========== TICK " + tick + " ==========");
                     lastTick = tick;
+                    tickHadActivity = false; // reset for new tick
                 }
                 // Get zone
                 Zone z = zones.get(zoneId);
@@ -53,6 +58,8 @@ public class SignalSimulator {
                 z.sosCount = sos;
                 z.infraStress = infra;
                 z.evaluateRisk();
+                z.zoneType = zoneType;
+                z.vulnerabilityBonus = vulnerability;
 
                 // Print only if ALERT or CRITICAL
                 if (z.isCritical) {
@@ -60,12 +67,18 @@ public class SignalSimulator {
                             " | Env: " + environmentalSignal +
                             " | SOS: " + sos +
                             " | Infra: " + infra +
-                            " | Risk Score: " + z.riskScore);
+                            " | Risk Score: " + z.riskScore +
+                            " | Type: " + zoneType);
+                    tickHadActivity = true;
                 } else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
                     System.out.println("  [ALERT] Zone " + zoneId +
                             " | Env: " + environmentalSignal +
                             " | SOS: " + sos +
                             " | Infra: " + infra);
+                    tickHadActivity = true;
+                }
+                if (!tickHadActivity) {
+                    System.out.println("  [ALL CLEAR] All zones normal.");
                 }
             }
 
