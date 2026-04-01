@@ -46,6 +46,7 @@ public class SignalMonitor {
             infraDeque.removeFirst();
         }
 
+    }
         //return most recent reading for this zone
         public double getLatestEnv(String zoneName) 
         {
@@ -81,11 +82,10 @@ public class SignalMonitor {
         System.out.println("  Env   : " + envWindow.get(zoneName));
         System.out.println("  SOS   : " + sosWindow.get(zoneName));
         System.out.println("  Infra : " + infraWindow.get(zoneName));
-    }
 
 
 
     }
 
     
-}s
+}

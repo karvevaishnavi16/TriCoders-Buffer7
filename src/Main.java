@@ -27,7 +27,7 @@ public class Main {
         SignalSimulator sim = new SignalSimulator();
 
         sim.runSimulation(
-                "data/mock_data.csv",
+                "C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv",
                 zones);
         System.out.println("\n===== FINAL ZONE STATUS =====");
 
