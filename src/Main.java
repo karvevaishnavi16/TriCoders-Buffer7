@@ -151,8 +151,8 @@ public class Main {
             record.setVulnerabilityBonus(z.getVulnerabilityBonus());
 
             // 🔹 Simulate fairness factors
-            record.setAidReceived(2); // you can make this dynamic later
-            record.setTimeIgnored(3); // simulate delay
+            record.setAidReceived((int) (Math.random() * 5));
+            record.setTimeIgnored((int) (Math.random() * 6));
 
             // 🔹 Neglect multiplier (IMPORTANT 🔥)
             double neglect = 1.0 + z.getRiskScore() * 0.3;
