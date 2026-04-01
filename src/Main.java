@@ -23,9 +23,9 @@ public class Main {
         zones.put("J", new Zone(10, "J"));
 
         // ── SIGNAL SIMULATION ──
-        System.out.println("========================================");
-        System.out.println("   SMART CITY CRISIS ENGINE ");
-        System.out.println("========================================");
+        System.out.println("======================================================================");
+        System.out.println("                     SMART CITY CRISIS ENGINE                         ");
+        System.out.println("======================================================================");
         System.out.println("\n--- PHASE 1: Crisis Detection Started ---\n");
         SignalSimulator sim = new SignalSimulator();
 

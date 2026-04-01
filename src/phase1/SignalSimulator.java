@@ -77,7 +77,7 @@ public class SignalSimulator {
                             " | Infra: " + infra);
                     tickHadActivity = true;
                 }
-                if (!tickHadActivity) {
+                if (!tickHadActivity) { //last tick
                     System.out.println("  [ALL CLEAR] All zones normal.");
                 }
             }
