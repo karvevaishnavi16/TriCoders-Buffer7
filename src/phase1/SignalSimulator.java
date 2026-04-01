@@ -28,6 +28,7 @@ public class SignalSimulator {
 
                 int tick = Integer.parseInt(data[0].trim());
                 String zoneId = data[1].trim();
+<<<<<<< HEAD
                 double environmentalSignal = Double.parseDouble(data[2].trim());
                 int sos = Integer.parseInt(data[3].trim());
                 double infra = Double.parseDouble(data[4].trim());
@@ -38,6 +39,14 @@ public class SignalSimulator {
                     lastTick = tick;
                 }
 
+=======
+                int tick = Integer.parseInt(data[0]);
+                double environmentalSignal = Double.parseDouble(data[2]);
+                int sos = Integer.parseInt(data[3]);
+                double infra = Double.parseDouble(data[4]);
+                String zoneType = data[5];
+                double vulnerability = Double.parseDouble(data[6]);
+>>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
                 // Get zone
                 Zone z = zones.get(zoneId);
                 if (z == null) {

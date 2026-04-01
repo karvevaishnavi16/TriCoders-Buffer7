@@ -3,6 +3,7 @@ import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
+import phase3.FairnessScorer;
 public class Main {
     public static void main(String[] args) {
 
@@ -24,7 +25,16 @@ public class Main {
         SignalSimulator sim = new SignalSimulator();
         sim.runSimulation("C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv", zones);
 
+<<<<<<< HEAD
         System.out.println("\n===== FINAL ZONE STATUS =====");
+=======
+        sim.runSimulation(
+           "data/mock_data.csv",
+            zones
+        );
+        System.out.println("\nFinal Zone Status:");
+
+>>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
         for (Zone z : zones.values()) {
             z.printStatus();
         }
@@ -32,37 +42,44 @@ public class Main {
         System.out.println("\n===== CRITICAL ZONES =====");
         boolean anyCritical = false;
         for (Map.Entry<String, Zone> entry : zones.entrySet()) {
+<<<<<<< HEAD
             if (entry.getValue().isCritical) {
                 System.out.println("!!! Zone " + entry.getKey() + " is CRITICAL !!!");
                 anyCritical = true;
             }
+=======
+        if (entry.getValue().isCritical()) 
+        {
+            System.out.println(entry.getKey());
+        }
+>>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
         }
         if (!anyCritical) System.out.println("No critical zones detected.");
 
        //aidRecord
-        AidRecord r1 = new AidRecord(1, 75.5);
-        AidRecord r2 = new AidRecord(2, 50.0);
-        AidRecord r3 = new AidRecord(3, 90.2);
+       /* AidRecord zoneA = new AidRecord(1, 75.5);
+        AidRecord zoneB = new AidRecord(2, 50.0);
+        AidRecord zoneC = new AidRecord(3, 90.2);
 
         System.out.println("\nInitial Aid Records:");
-        r1.printRecord();
-        r2.printRecord();
-        r3.printRecord();
+        zoneA.printRecord();
+        zoneB.printRecord();
+        zoneC.printRecord();
 
-        r1.aidReceived = 5;
-        r1.timeIgnored = 2;
+        zoneA.setAidReceived(5);
+        zoneA.setTimeIgnored(2);
 
-        r2.aidReceived = 3;
-        r2.timeIgnored = 1;
+        zoneB.setAidReceived(3);
+        zoneB.setTimeIgnored(1);
 
-        r3.aidReceived = 7;
-        r3.timeIgnored = 4;
+        zoneC.setAidReceived(7);
+        zoneC.setTimeIgnored(4);
 
         System.out.println("\nUpdated Aid Records:");
-        r1.printRecord();
-        r2.printRecord();
-        r3.printRecord();
-
+        zoneA.printRecord();
+        zoneB.printRecord();
+        zoneC.printRecord();
+         */
 
 
          // Create graph
@@ -87,6 +104,7 @@ public class Main {
         System.out.println("Graph:");
         graph.printGraph();
 
+<<<<<<< HEAD
         // Run Dijkstra from A
         System.out.println("\nRunning Dijkstra from A...");
         graph.dijkstra("A");
@@ -98,5 +116,57 @@ public class Main {
         // Run again after update
         System.out.println("\nRunning Dijkstra again after update...");
         graph.dijkstra("A");
+=======
+        // Run Dijkstra
+        System.out.println("\nShortest Paths:");
+        graph.shortestPath("A");
+
+         // Compute scores
+        /*double scoreA = FairnessScorer.computeScore(zoneA);
+        double scoreB = FairnessScorer.computeScore(zoneB);
+        double scoreC = FairnessScorer.computeScore(zoneC);
+
+        // Print scores
+        FairnessScorer.printScore("Zone A", scoreA);
+        FairnessScorer.printScore("Zone B", scoreB);
+        FairnessScorer.printScore("Zone C", scoreC);
+
+        // Optional: find highest priority
+        if (scoreA >= scoreB && scoreA >= scoreC) {
+            System.out.println("Highest priority: Zone A");
+        } else if (scoreB >= scoreA && scoreB >= scoreC) {
+            System.out.println("Highest priority: Zone B");
+        } else {
+            System.out.println("Highest priority: Zone C");
+        }*/
+        System.out.println("\nPriority Scores:");
+
+        for (Zone z : zones.values()) {
+
+            // Convert Zone → AidRecord
+            AidRecord record = new AidRecord(z.getZoneId(), z.getRiskScore());
+
+            // 🔹 Set vulnerability
+            record.setVulnerabilityBonus(z.getVulnerabilityBonus());
+
+            // 🔹 Simulate fairness factors
+            record.setAidReceived(2);     // you can make this dynamic later
+            record.setTimeIgnored(3);     // simulate delay
+
+            // 🔹 Neglect multiplier (IMPORTANT 🔥)
+            double neglect = 1.0 + z.getRiskScore() * 0.3;
+            if (z.isCritical()) {
+                neglect += 0.5;
+            }
+
+            record.setNeglectMultiplier(neglect);
+
+            // 🔹 Compute score
+            double score = FairnessScorer.computeScore(record);
+
+            // 🔹 Print
+            FairnessScorer.printScore(z.getZoneName(), score);
+        }
+>>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
    }
 }

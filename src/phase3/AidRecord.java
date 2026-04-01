@@ -19,6 +19,38 @@ public class AidRecord
         this.neglectMultiplier=1.0;
     }
 
+    public double getDamageLevel() {
+    return damageLevel;
+}
+
+public int getAidReceived() {
+    return aidReceived;
+}
+
+public int getTimeIgnored() {
+    return timeIgnored;
+}
+
+public double getVulnerabilityBonus() {
+    return vulnerabilityBonus;
+}
+
+public double getNeglectMultiplier() {
+    return neglectMultiplier;
+}
+public void setAidReceived(int aidReceived) {
+    this.aidReceived = aidReceived;
+}
+
+public void setTimeIgnored(int timeIgnored) {
+    this.timeIgnored = timeIgnored;
+}
+
+public void setVulnerabilityBonus(double vulnerabilityBonus) {
+    this.vulnerabilityBonus = vulnerabilityBonus;
+}
+ public void setNeglectMultiplier(double neglectMultiplier) {
+        this.neglectMultiplier = neglectMultiplier; }
     public void printRecord()
     {
         System.out.println(
