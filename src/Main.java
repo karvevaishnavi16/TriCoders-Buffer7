@@ -22,7 +22,7 @@ public class Main {
 
         // ── SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
-        sim.runSimulation("data/mock_data.csv", zones);
+        sim.runSimulation("C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv", zones);
 
         System.out.println("\n===== FINAL ZONE STATUS =====");
         for (Zone z : zones.values()) {
