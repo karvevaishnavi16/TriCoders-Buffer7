@@ -23,18 +23,14 @@ public class Main {
 
         // ── SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
-        sim.runSimulation("C:\\Users\\Karve\\DSAprj-Buffer\\TriCoders-Buffer7\\data\\mock_data.csv", zones);
-
-<<<<<<< HEAD
-        System.out.println("\n===== FINAL ZONE STATUS =====");
-=======
+        
         sim.runSimulation(
-           "data/mock_data.csv",
+            "data/mock_data.csv",
             zones
         );
-        System.out.println("\nFinal Zone Status:");
+        System.out.println("\n===== FINAL ZONE STATUS =====");
+        
 
->>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
         for (Zone z : zones.values()) {
             z.printStatus();
         }
@@ -42,17 +38,10 @@ public class Main {
         System.out.println("\n===== CRITICAL ZONES =====");
         boolean anyCritical = false;
         for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-<<<<<<< HEAD
             if (entry.getValue().isCritical) {
                 System.out.println("!!! Zone " + entry.getKey() + " is CRITICAL !!!");
                 anyCritical = true;
             }
-=======
-        if (entry.getValue().isCritical()) 
-        {
-            System.out.println(entry.getKey());
-        }
->>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
         }
         if (!anyCritical) System.out.println("No critical zones detected.");
 
@@ -104,7 +93,6 @@ public class Main {
         System.out.println("Graph:");
         graph.printGraph();
 
-<<<<<<< HEAD
         // Run Dijkstra from A
         System.out.println("\nRunning Dijkstra from A...");
         graph.dijkstra("A");
@@ -116,10 +104,7 @@ public class Main {
         // Run again after update
         System.out.println("\nRunning Dijkstra again after update...");
         graph.dijkstra("A");
-=======
-        // Run Dijkstra
-        System.out.println("\nShortest Paths:");
-        graph.shortestPath("A");
+       
 
          // Compute scores
         /*double scoreA = FairnessScorer.computeScore(zoneA);
@@ -167,6 +152,5 @@ public class Main {
             // 🔹 Print
             FairnessScorer.printScore(z.getZoneName(), score);
         }
->>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
    }
 }
