@@ -3,6 +3,8 @@ import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
+import phase2.EvacuationRouter;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -20,9 +22,61 @@ public class Main {
         zones.put("I", new Zone(9, "I"));
         zones.put("J", new Zone(10, "J"));
 
+
+         // Create graph
+        CityGraph graph = new CityGraph();
+
+        // Add zones
+        graph.addZone("A");
+        graph.addZone("B");
+        graph.addZone("C");
+        graph.addZone("D");
+        graph.addZone("E");
+        graph.addZone("F");
+        graph.addZone("G");
+        graph.addZone("H");
+        graph.addZone("I");
+        graph.addZone("J");
+
+
+
+
+
+        // Add connections (with weights)
+        graph.addConnection("A", "B", 5);
+        graph.addConnection("A", "C", 10);
+        graph.addConnection("B", "C", 3);
+        graph.addConnection("B", "D", 7);
+        graph.addConnection("C", "D", 2);
+        graph.addConnection("D", "E", 4);
+        graph.addConnection("E", "H", 6);
+        graph.addConnection("F", "I", 5);
+        graph.addConnection("G", "H", 4);
+        graph.addConnection("D", "I", 7);
+        graph.addConnection("G", "J", 6);
+
+
+        // Print graph
+        System.out.println("Graph:");
+        graph.printGraph();
+
+        // Run Dijkstra from A
+        System.out.println("\nRunning Dijkstra from A...");
+        graph.dijkstra("A");
+
+        // Optional: test weight update
+        System.out.println("\nUpdating weight B -> D to 2...");
+        graph.updateWeight("B", "D", 2);
+
+        // Run again after update
+        System.out.println("\nRunning Dijkstra again after update...");
+        graph.dijkstra("A");
+
+        
+
         // ── SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
-        sim.runSimulation("data/mock_data.csv", zones);
+        sim.runSimulation("data/mock_data.csv", zones, graph);
 
         System.out.println("\n===== FINAL ZONE STATUS =====");
         for (Zone z : zones.values()) {
@@ -65,38 +119,15 @@ public class Main {
 
 
 
-         // Create graph
-        CityGraph graph = new CityGraph();
+        
 
-        // Add zones
-        graph.addZone("A");
-        graph.addZone("B");
-        graph.addZone("C");
-        graph.addZone("D");
-        graph.addZone("E");
+        EvacuationRouter router = new EvacuationRouter();
 
-        // Add connections (with weights)
-        graph.addConnection("A", "B", 5);
-        graph.addConnection("A", "C", 10);
-        graph.addConnection("B", "C", 3);
-        graph.addConnection("B", "D", 7);
-        graph.addConnection("C", "D", 2);
-        graph.addConnection("D", "E", 4);
+        List<String> path = router.findRoute("A", graph);
 
-        // Print graph
-        System.out.println("Graph:");
-        graph.printGraph();
+         System.out.println("Evacuation Path: " + path);
 
-        // Run Dijkstra from A
-        System.out.println("\nRunning Dijkstra from A...");
-        graph.dijkstra("A");
 
-        // Optional: test weight update
-        System.out.println("\nUpdating weight B -> D to 2...");
-        graph.updateWeight("B", "D", 2);
 
-        // Run again after update
-        System.out.println("\nRunning Dijkstra again after update...");
-        graph.dijkstra("A");
    }
 }

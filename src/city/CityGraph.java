@@ -9,6 +9,9 @@ public class CityGraph {
     public CityGraph() {
         adjList = new HashMap<>();
     }
+    public Set<String> getAllZones() {
+    return adjList.keySet();
+}
 
     public void addZone(String zone) {
         adjList.putIfAbsent(zone, new ArrayList<>());

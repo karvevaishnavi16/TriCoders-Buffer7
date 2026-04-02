@@ -1,4 +1,4 @@
-tick,zone,environmentSignal,sosCount,infraStress
+tick,zone,environmentalsignal,sosCount,infraStress
 1,A,4.5,2,1.1
 1,B,3.8,1,1.0
 1,C,4.2,2,1.0

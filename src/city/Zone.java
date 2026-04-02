@@ -19,16 +19,27 @@ public class Zone {
         this.isCritical = false;
     }
 
+    // public void evaluateRisk() {
+    //     int flagCount = 0;
+
+    //     if (environmentalSignal > 7.0) flagCount++;
+    //     if (sosCount > 30) flagCount++;
+    //     if (infraStress > 2.0) flagCount++;
+
+    //     riskScore = flagCount;
+    //     isCritical = (flagCount >= 2);
+    // }
+
     public void evaluateRisk() {
-        int flagCount = 0;
 
-        if (environmentalSignal > 7.0) flagCount++;
-        if (sosCount > 30) flagCount++;
-        if (infraStress > 2.0) flagCount++;
-
-        riskScore = flagCount;
-        isCritical = (flagCount >= 2);
+    if (environmentalSignal > 7.0) {
+        isCritical = true;
+    } else {
+        isCritical = false;
     }
+
+    riskScore = environmentalSignal;
+}
 
     public void printStatus() {
         System.out.println("-----------------------------");
