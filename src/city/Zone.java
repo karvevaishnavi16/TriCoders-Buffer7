@@ -8,6 +8,8 @@ public class Zone {
     public double infraStress;
     public double riskScore;
     public boolean isCritical;
+    public String zoneType;
+    public double vulnerabilityBonus;
 
     public Zone(int zoneId, String zoneName) {
         this.zoneId = zoneId;
@@ -17,29 +19,71 @@ public class Zone {
         this.infraStress = 1.0;
         this.riskScore = 0.0;
         this.isCritical = false;
+        this.zoneType = "RESIDENTIAL";
+        this.vulnerabilityBonus = 1.0;
     }
 
-    // public void evaluateRisk() {
-    //     int flagCount = 0;
+    public int getZoneId() {
+        return zoneId;
+    }
+    public String getZoneName() {
+        return zoneName;
+    }
+    public double getEnvironmentalSignal() {
+        return environmentalSignal;
+    }
+    public int getSosCount() {
+        return sosCount;
+    }
+    public double getInfraStress() {
+        return infraStress;
+    }
+    public double getRiskScore() {
+        return riskScore;
+    }
+    public double getVulnerabilityBonus() {
+        return vulnerabilityBonus;
+    }
+    public boolean isCritical() {
+        return isCritical;
+    }
 
-    //     if (environmentalSignal > 7.0) flagCount++;
-    //     if (sosCount > 30) flagCount++;
-    //     if (infraStress > 2.0) flagCount++;
-
-    //     riskScore = flagCount;
-    //     isCritical = (flagCount >= 2);
-    // }
+    public void setZoneId(int zoneId) {
+        this.zoneId = zoneId;
+    }
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+    }
+    public void setEnvironmentalSignal(double environmentalSignal) {
+        this.environmentalSignal = environmentalSignal;
+    }
+    public void setSosCount(int sosCount) {
+        this.sosCount = sosCount;
+    }
+    public void setInfraStress(double infraStress) {
+        this.infraStress = infraStress;
+    }
+    public void setRiskScore(double riskScore) {
+        this.riskScore = riskScore;
+    }
+    public void setCritical(boolean critical) {
+        this.isCritical = critical;
+    }
 
     public void evaluateRisk() {
 
-    if (environmentalSignal > 7.0) {
-        isCritical = true;
-    } else {
-        isCritical = false;
-    }
+        int abnormalCount = 0;
 
-    riskScore = environmentalSignal;
-}
+        if (environmentalSignal > 7.0)
+            abnormalCount++;
+        if (sosCount > 30)
+            abnormalCount++;
+        if (infraStress > 2.0)
+            abnormalCount++;
+
+        riskScore = abnormalCount;
+        isCritical = (abnormalCount >= 2);
+    }
 
     public void printStatus() {
         System.out.println("-----------------------------");

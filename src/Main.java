@@ -1,15 +1,20 @@
 import java.util.*;
-import phase3.AidRecord;
+
 import city.CityGraph;
 import city.Zone;
+
 import phase1.SignalSimulator;
+import phase1.SignalMonitor;
+
 import phase2.EvacuationRouter;
+
+import phase3.AidRecord;
+import phase3.FairnessScorer;
 
 public class Main {
     public static void main(String[] args) {
 
-      //zone
-      // ── ZONES ──
+        // ── ZONES ──
         Map<String, Zone> zones = new HashMap<>();
         zones.put("A", new Zone(1, "A"));
         zones.put("B", new Zone(2, "B"));
@@ -22,112 +27,97 @@ public class Main {
         zones.put("I", new Zone(9, "I"));
         zones.put("J", new Zone(10, "J"));
 
+        // ── PHASE 1: SIGNAL SIMULATION ──
+        System.out.println("======================================================================");
+        System.out.println("SMART CITY CRISIS ENGINE");
+        System.out.println("======================================================================");
 
-         // Create graph
+        SignalSimulator sim = new SignalSimulator();
+        sim.runSimulation("data/mock_data.csv", zones);
+
+        // ── FINAL STATUS ──
+        System.out.println("\n===== FINAL ZONE STATUS =====");
+        for (Zone z : zones.values()) {
+            z.printStatus();
+        }
+
+        // ── CRITICAL ZONES ──
+        System.out.println("\n===== CRITICAL ZONES =====");
+        boolean anyCritical = false;
+        for (Zone z : zones.values()) {
+            if (z.isCritical) {
+                System.out.println("!!! Zone " + z.zoneName +
+                        " [" + z.zoneType + "] is CRITICAL !!!");
+                anyCritical = true;
+            }
+        }
+        if (!anyCritical) {
+            System.out.println("No critical zones detected.");
+        }
+
+        // ── SIGNAL MONITOR TEST ──
+        System.out.println("\n===== SIGNAL MONITOR TEST =====");
+        SignalMonitor monitor = new SignalMonitor();
+        monitor.initZone("A");
+
+        double[] testValues = {4, 5, 6, 7, 8, 8.5, 9};
+
+        for (double val : testValues) {
+            monitor.addReading("A", val, 5, 1.2);
+            System.out.println("Env=" + val +
+                    " | Size=" + monitor.getWindowSize("A") +
+                    " | Latest=" + monitor.getLatestEnv("A"));
+        }
+
+        // ── PHASE 2: EVACUATION ──
+        System.out.println("\n===== EVACUATION ROUTING =====");
+
         CityGraph graph = new CityGraph();
 
-        // Add zones
-        graph.addZone("A");
-        graph.addZone("B");
-        graph.addZone("C");
-        graph.addZone("D");
-        graph.addZone("E");
-        graph.addZone("F");
-        graph.addZone("G");
-        graph.addZone("H");
-        graph.addZone("I");
-        graph.addZone("J");
+        for (String z : zones.keySet()) {
+            graph.addZone(z);
+        }
 
-
-
-
-
-        // Add connections (with weights)
         graph.addConnection("A", "B", 5);
         graph.addConnection("A", "C", 10);
         graph.addConnection("B", "C", 3);
         graph.addConnection("B", "D", 7);
         graph.addConnection("C", "D", 2);
         graph.addConnection("D", "E", 4);
-        graph.addConnection("E", "H", 6);
-        graph.addConnection("F", "I", 5);
+        graph.addConnection("D", "H", 6);
+        graph.addConnection("E", "I", 3);
+        graph.addConnection("C", "J", 8);
+        graph.addConnection("F", "G", 5);
         graph.addConnection("G", "H", 4);
-        graph.addConnection("D", "I", 7);
-        graph.addConnection("G", "J", 6);
-
-
-        // Print graph
-        System.out.println("Graph:");
-        graph.printGraph();
-
-        // Run Dijkstra from A
-        System.out.println("\nRunning Dijkstra from A...");
-        graph.dijkstra("A");
-
-        // Optional: test weight update
-        System.out.println("\nUpdating weight B -> D to 2...");
-        graph.updateWeight("B", "D", 2);
-
-        // Run again after update
-        System.out.println("\nRunning Dijkstra again after update...");
-        graph.dijkstra("A");
-
-        
-
-        // ── SIGNAL SIMULATION ──
-        SignalSimulator sim = new SignalSimulator();
-        sim.runSimulation("data/mock_data.csv", zones, graph);
-
-        System.out.println("\n===== FINAL ZONE STATUS =====");
-        for (Zone z : zones.values()) {
-            z.printStatus();
-        }
-
-        System.out.println("\n===== CRITICAL ZONES =====");
-        boolean anyCritical = false;
-        for (Map.Entry<String, Zone> entry : zones.entrySet()) {
-            if (entry.getValue().isCritical) {
-                System.out.println("!!! Zone " + entry.getKey() + " is CRITICAL !!!");
-                anyCritical = true;
-            }
-        }
-        if (!anyCritical) System.out.println("No critical zones detected.");
-
-       //aidRecord
-        AidRecord r1 = new AidRecord(1, 75.5);
-        AidRecord r2 = new AidRecord(2, 50.0);
-        AidRecord r3 = new AidRecord(3, 90.2);
-
-        System.out.println("\nInitial Aid Records:");
-        r1.printRecord();
-        r2.printRecord();
-        r3.printRecord();
-
-        r1.aidReceived = 5;
-        r1.timeIgnored = 2;
-
-        r2.aidReceived = 3;
-        r2.timeIgnored = 1;
-
-        r3.aidReceived = 7;
-        r3.timeIgnored = 4;
-
-        System.out.println("\nUpdated Aid Records:");
-        r1.printRecord();
-        r2.printRecord();
-        r3.printRecord();
-
-
-
-        
 
         EvacuationRouter router = new EvacuationRouter();
 
-        List<String> path = router.findRoute("A", graph);
+        List<String> route = router.findRoute("A", graph);
+        router.printRoute("A", route, graph);
 
-         System.out.println("Evacuation Path: " + path);
+        // congestion only ONCE
+        router.simulateCongestion("A", "D", "H", graph);
 
+        // ── PHASE 3: FAIRNESS ──
+        System.out.println("\n===== FAIRNESS SCORES =====");
 
+        for (Zone z : zones.values()) {
 
-   }
+            AidRecord record = new AidRecord(z.zoneId, z.riskScore);
+
+            record.setVulnerabilityBonus(z.vulnerabilityBonus);
+            record.setAidReceived((int)(Math.random() * 5));
+            record.setTimeIgnored((int)(Math.random() * 6));
+
+            double neglect = 1.0 + z.riskScore * 0.3;
+            if (z.isCritical) {
+                neglect += 0.5;
+            }
+
+            record.setNeglectMultiplier(neglect);
+
+            double score = FairnessScorer.computeScore(record);
+    System.out.printf("%s: priority score = %.2f\n", z.zoneName, score);
+        }
+    }
 }

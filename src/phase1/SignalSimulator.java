@@ -2,81 +2,83 @@ package phase1;
 
 import java.io.*;
 import java.util.*;
-
 import city.Zone;
-import city.CityGraph;
-import phase2.EvacuationRouter;
 
 public class SignalSimulator {
 
-    public void runSimulation(String filePath, Map<String, Zone> zones, CityGraph graph) {
+    public void runSimulation(String filePath, Map<String, Zone> zones) {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
             int lastTick = -1;
-
+            boolean tickHadActivity = false;
             br.readLine(); // skip header
 
             while ((line = br.readLine()) != null) {
 
-                // skip empty lines
+                // Fix 1 — skip empty lines
                 line = line.trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty())
+                    continue;
 
                 String[] data = line.split(",");
 
-                // skip incomplete rows
-                if (data.length < 5) continue;
+                // Fix 2 — skip incomplete rows
+                if (data.length < 7)
+                    continue;
 
                 int tick = Integer.parseInt(data[0].trim());
                 String zoneId = data[1].trim();
                 double environmentalSignal = Double.parseDouble(data[2].trim());
                 int sos = Integer.parseInt(data[3].trim());
                 double infra = Double.parseDouble(data[4].trim());
+                String zoneType = data[5].trim();
+                double vulnerability = Double.parseDouble(data[6].trim());
 
-                // print tick header
+                // Print tick header when tick changes
                 if (tick != lastTick) {
+                    // if previous tick had no alerts or crisis — print ALL CLEAR
+                    if (lastTick != -1 && !tickHadActivity) {
+                        System.out.println("  [ALL CLEAR] All zones normal.");
+                    }
                     System.out.println("\n========== TICK " + tick + " ==========");
                     lastTick = tick;
+                    tickHadActivity = false; // reset for new tick
                 }
-
-                // get zone
+                // Get zone
                 Zone z = zones.get(zoneId);
                 if (z == null) {
                     System.out.println("Zone not found: " + zoneId);
                     continue;
                 }
 
-                // update values
+                // Update values
                 z.environmentalSignal = environmentalSignal;
                 z.sosCount = sos;
                 z.infraStress = infra;
-
-                // evaluate risk
                 z.evaluateRisk();
+                z.zoneType = zoneType;
+                z.vulnerabilityBonus = vulnerability;
 
-                // 🚨 CRITICAL
+                // Print only if ALERT or CRITICAL
                 if (z.isCritical) {
                     System.out.println("  !!! CRISIS DETECTED: Zone " + zoneId +
                             " | Env: " + environmentalSignal +
                             " | SOS: " + sos +
                             " | Infra: " + infra +
-                            " | Risk Score: " + z.riskScore);
-
-                    // 🔥 EVACUATION LOGIC
-                    EvacuationRouter router = new EvacuationRouter();
-                    List<String> path = router.findRoute(zoneId, graph);
-
-                    System.out.println("  🚑 Evacuation Path: " + path);
-                }
-
-                // ⚠ ALERT (optional)
-                else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
+                            " | Risk Score: " + z.riskScore +
+                            " | Type: " + zoneType);
+                    tickHadActivity = true;
+                } else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
                     System.out.println("  [ALERT] Zone " + zoneId +
                             " | Env: " + environmentalSignal +
                             " | SOS: " + sos +
                             " | Infra: " + infra);
+                    tickHadActivity = true;
+                }
+                if (!tickHadActivity) { //last tick
+                    System.out.println("  [ALL CLEAR] All zones normal.");
                 }
             }
 

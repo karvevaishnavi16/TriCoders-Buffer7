@@ -12,6 +12,9 @@ public class CityGraph {
     public Set<String> getAllZones() {
     return adjList.keySet();
 }
+    public Map<String, List<String[]>> getAdjList() {
+    return adjList;
+}
 
     public void addZone(String zone) {
         adjList.putIfAbsent(zone, new ArrayList<>());

@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "TriCoders-Buffer7_99e42e7c"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/madhurakarkhanis/git/TriCoders-Buffer7/src",
+      "program": "/Users/madhurakarkhanis/git/TriCoders-Buffer7/src/build/Debug/outDebug"
+    }
+  ]
+}
