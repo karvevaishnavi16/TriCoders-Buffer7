@@ -26,10 +26,10 @@ public class Zone {
         return zoneId;
     }
 
-<<<<<<< HEAD
+
     public void evaluateRisk() {
         int flagCount = 0;
-=======
+    }
     public String getZoneName() {
         return zoneName;
     }
@@ -101,7 +101,7 @@ public class Zone {
         }
         //assign risk score
         riskScore = abnormalCount;
->>>>>>> 8ed7710d51b8ecfbff1f06c404e18f0d30f41ddf
+
 
         if (environmentalSignal > 7.0) flagCount++;
         if (sosCount > 30) flagCount++;
