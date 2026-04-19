@@ -27,9 +27,7 @@ public class Zone {
     }
 
 
-    public void evaluateRisk() {
-        int flagCount = 0;
-    }
+    
     public String getZoneName() {
         return zoneName;
     }
@@ -84,6 +82,7 @@ public class Zone {
     }
     public void evaluateRisk()
     {
+         int flagCount=0;
         int abnormalCount=0;
         // Check environmental condition
         if(environmentalSignal > 7.0)
@@ -102,11 +101,11 @@ public class Zone {
         //assign risk score
         riskScore = abnormalCount;
 
-
+       
         if (environmentalSignal > 7.0) flagCount++;
         if (sosCount > 30) flagCount++;
         if (infraStress > 2.0) flagCount++;
-
+        
         riskScore = flagCount;
         isCritical = (flagCount >= 2);
     }

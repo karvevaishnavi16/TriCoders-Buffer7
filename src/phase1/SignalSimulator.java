@@ -37,10 +37,10 @@ public class SignalSimulator {
                     System.out.println("\n========== TICK " + tick + " ==========");
                     lastTick = tick;
                 }
-                int tick = Integer.parseInt(data[0]);
-                double environmentalSignal = Double.parseDouble(data[2]);
-                int sos = Integer.parseInt(data[3]);
-                double infra = Double.parseDouble(data[4]);
+                tick = Integer.parseInt(data[0]);
+                environmentalSignal = Double.parseDouble(data[2]);
+                sos = Integer.parseInt(data[3]);
+                infra = Double.parseDouble(data[4]);
                 String zoneType = data[5];
                 double vulnerability = Double.parseDouble(data[6]);
                 // Get zone

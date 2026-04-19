@@ -4,6 +4,7 @@ import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
 import phase3.FairnessScorer;
+import phase3.AidDistributor;
 public class Main {
     public static void main(String[] args) {
 
@@ -135,14 +136,15 @@ public class Main {
             record.setVulnerabilityBonus(z.getVulnerabilityBonus());
 
             // 🔹 Simulate fairness factors
-            record.setAidReceived(2);     // you can make this dynamic later
-            record.setTimeIgnored(3);     // simulate delay
+            record.setAidReceived((int) (Math.random() * 5));
+            record.setTimeIgnored((int) (Math.random() * 6));
 
-            // 🔹 Neglect multiplier (IMPORTANT 🔥)
+            // 🔹 Neglect multiplier
             double neglect = 1.0 + z.getRiskScore() * 0.3;
             if (z.isCritical()) {
                 neglect += 0.5;
             }
+
 
             record.setNeglectMultiplier(neglect);
 
@@ -152,5 +154,32 @@ public class Main {
             // 🔹 Print
             FairnessScorer.printScore(z.getZoneName(), score);
         }
+          // ── AID DISTRIBUTOR TEST ──
+System.out.println("\n===== AID DISTRIBUTOR — 3 CYCLES =====");
+
+AidDistributor distributor = new AidDistributor();
+
+// Register zones with damage level from actual simulation
+// vulnerabilityBonus comes from CSV
+distributor.registerZone("A", 1, zones.get("A").getRiskScore(),
+    zones.get("A").getVulnerabilityBonus());
+distributor.registerZone("B", 2, zones.get("B").getRiskScore(),
+    zones.get("B").getVulnerabilityBonus());
+distributor.registerZone("C", 3, zones.get("C").getRiskScore(),
+    zones.get("C").getVulnerabilityBonus());
+distributor.registerZone("D", 4, zones.get("D").getRiskScore(),
+    zones.get("D").getVulnerabilityBonus());
+distributor.registerZone("E", 5, zones.get("E").getRiskScore(),
+    zones.get("E").getVulnerabilityBonus());
+// Run 3 aid cycles — 2 units per cycle
+distributor.runCycle(1, 2);
+distributor.runCycle(2, 2);
+distributor.runCycle(3, 2);
+distributor.printAllRecords();
+
+
    }
+ 
+
+
 }
