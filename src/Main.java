@@ -1,5 +1,6 @@
 import java.util.*;
 import phase3.AidRecord;
+import phase1.RiskHeap;
 import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
@@ -62,6 +63,18 @@ public class Main {
                     " | Latest: " + monitor.getLatestEnv("A"));
         }
         monitor.printWindow("A");
+
+        // ── RISK HEAP TEST ──
+        System.out.println("\n===== RISK HEAP — ZONE RANKING =====");
+
+        RiskHeap riskHeap = new RiskHeap();
+        riskHeap.updateAll(zones);
+
+        System.out.println("Highest risk zone: Zone " +
+           riskHeap.getHighestRisk().zoneName +
+            " (score: " + riskHeap.getHighestRisk().riskScore + ")");
+
+        riskHeap.printTopZones(5);
 
         // aidRecord
         /*
