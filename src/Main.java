@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 import city.CityGraph;
@@ -5,6 +6,7 @@ import city.Zone;
 
 import phase1.SignalSimulator;
 import phase1.SignalMonitor;
+import phase1.SpreadPredictor;
 
 import phase2.EvacuationRouter;
 
@@ -27,11 +29,11 @@ public class Main {
         zones.put("I", new Zone(9, "I"));
         zones.put("J", new Zone(10, "J"));
 
-        // ── PHASE 1: SIGNAL SIMULATION ──
         System.out.println("======================================================================");
         System.out.println("SMART CITY CRISIS ENGINE");
         System.out.println("======================================================================");
 
+        // ── PHASE 1: SIGNAL SIMULATION ──
         SignalSimulator sim = new SignalSimulator();
         sim.runSimulation("data/mock_data.csv", zones);
 
@@ -44,6 +46,7 @@ public class Main {
         // ── CRITICAL ZONES ──
         System.out.println("\n===== CRITICAL ZONES =====");
         boolean anyCritical = false;
+
         for (Zone z : zones.values()) {
             if (z.isCritical) {
                 System.out.println("!!! Zone " + z.zoneName +
@@ -51,12 +54,15 @@ public class Main {
                 anyCritical = true;
             }
         }
+
         if (!anyCritical) {
-            System.out.println("No critical zones detected.");
+            System.out.println("⚠ No critical zones detected → forcing test case...");
+            zones.get("A").isCritical = true;   // 🔥 ensures rest of program runs
         }
 
         // ── SIGNAL MONITOR TEST ──
         System.out.println("\n===== SIGNAL MONITOR TEST =====");
+
         SignalMonitor monitor = new SignalMonitor();
         monitor.initZone("A");
 
@@ -78,6 +84,7 @@ public class Main {
             graph.addZone(z);
         }
 
+        // connections
         graph.addConnection("A", "B", 5);
         graph.addConnection("A", "C", 10);
         graph.addConnection("B", "C", 3);
@@ -92,11 +99,18 @@ public class Main {
 
         EvacuationRouter router = new EvacuationRouter();
 
-        List<String> route = router.findRoute("A", graph);
-        router.printRoute("A", route, graph);
+        // run evacuation
+        for (Zone z : zones.values()) {
+            if (z.isCritical) {
+                System.out.println("\n🚨 Crisis in Zone " + z.zoneName);
 
-        // congestion only ONCE
-        router.simulateCongestion("A", "D", "H", graph);
+                List<String> route = router.findRoute(z.zoneName, graph);
+                router.printRoute(z.zoneName, route, graph);
+
+                router.simulateCongestion(z.zoneName, "D", "H", graph);
+                break;
+            }
+        }
 
         // ── PHASE 3: FAIRNESS ──
         System.out.println("\n===== FAIRNESS SCORES =====");
@@ -117,7 +131,30 @@ public class Main {
             record.setNeglectMultiplier(neglect);
 
             double score = FairnessScorer.computeScore(record);
-    System.out.printf("%s: priority score = %.2f\n", z.zoneName, score);
+
+            System.out.printf("%s: priority score = %.2f\n",
+                    z.zoneName, score);
+        }
+
+        // ── SPREAD PREDICTION ──
+        System.out.println("\n===== SPREAD PREDICTION =====");
+
+        SpreadPredictor predictor = new SpreadPredictor();
+        boolean predicted = false;
+
+        for (Zone z : zones.values()) {
+            if (z.isCritical) {
+                System.out.println("Predicting spread from Zone " + z.zoneName);
+                predictor.predict(z.zoneName, graph, zones);
+                predicted = true;
+                break;
+            }
+        }
+
+        if (!predicted) {
+            System.out.println("⚠ No prediction executed.");
         }
     }
 }
+
+
