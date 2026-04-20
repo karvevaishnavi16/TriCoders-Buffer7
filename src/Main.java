@@ -1,4 +1,5 @@
 import java.util.*;
+import phase2.AmbulanceDispatcher;
 import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
@@ -197,6 +198,17 @@ hospitalAssigner.assignPatient();
 hospitalAssigner.assignPatient();
 hospitalAssigner.assignPatient();
 
+System.out.println("\n===== AMBULANCE DISPATCHER TEST =====");
+
+AmbulanceDispatcher ambulanceDispatcher = new AmbulanceDispatcher();
+ambulanceDispatcher.addCall(2, 5);
+ambulanceDispatcher.addCall(7, 9);
+ambulanceDispatcher.addCall(4, 7);
+
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
 
    }
  
