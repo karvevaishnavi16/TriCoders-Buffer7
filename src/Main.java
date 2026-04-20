@@ -1,6 +1,8 @@
 
 import java.util.*;
 
+import phase3.AidRecord;
+import phase1.RiskHeap;
 import city.CityGraph;
 import city.Zone;
 
@@ -77,6 +79,43 @@ public class Main {
 
         // ── PHASE 2: EVACUATION ──
         System.out.println("\n===== EVACUATION ROUTING =====");
+        // ── RISK HEAP TEST ──
+        System.out.println("\n===== RISK HEAP — ZONE RANKING =====");
+
+        RiskHeap riskHeap = new RiskHeap();
+        riskHeap.updateAll(zones);
+
+        System.out.println("Highest risk zone: Zone " +
+           riskHeap.getHighestRisk().zoneName +
+            " (score: " + riskHeap.getHighestRisk().riskScore + ")");
+
+        riskHeap.printTopZones(5);
+
+        // aidRecord
+        /*
+         * AidRecord zoneA = new AidRecord(1, 75.5);
+         * AidRecord zoneB = new AidRecord(2, 50.0);
+         * AidRecord zoneC = new AidRecord(3, 90.2);
+         * 
+         * System.out.println("\nInitial Aid Records:");
+         * zoneA.printRecord();
+         * zoneB.printRecord();
+         * zoneC.printRecord();
+         * 
+         * zoneA.setAidReceived(5);
+         * zoneA.setTimeIgnored(2);
+         * 
+         * zoneB.setAidReceived(3);
+         * zoneB.setTimeIgnored(1);
+         * 
+         * zoneC.setAidReceived(7);
+         * zoneC.setTimeIgnored(4);
+         * 
+         * System.out.println("\nUpdated Aid Records:");
+         * zoneA.printRecord();
+         * zoneB.printRecord();
+         * zoneC.printRecord();
+         */
 
         CityGraph graph = new CityGraph();
 
