@@ -1,12 +1,13 @@
 package phase1;
 
+import phase1.RiskHeap;
 import java.io.*;
 import java.util.*;
 import city.Zone;
 
 public class SignalSimulator {
 
-    public void runSimulation(String filePath, Map<String, Zone> zones) {
+    public void runSimulation(String filePath, Map<String, Zone> zones, RiskHeap riskHeap) {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -45,6 +46,10 @@ public class SignalSimulator {
                     System.out.println("\n========== TICK " + tick + " ==========");
                     lastTick = tick;
                     tickHadActivity = false; // reset for new tick
+                    // update heap with latest risk scores
+                    riskHeap.updateAll(zones);
+                    // print top 3 risk zones this tick
+                    riskHeap.printTopZones(3);
                 }
                 // Get zone
                 Zone z = zones.get(zoneId);
@@ -77,7 +82,7 @@ public class SignalSimulator {
                             " | Infra: " + infra);
                     tickHadActivity = true;
                 }
-                if (!tickHadActivity) { //last tick
+                if (!tickHadActivity) { // last tick
                     System.out.println("  [ALL CLEAR] All zones normal.");
                 }
             }

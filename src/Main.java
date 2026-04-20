@@ -1,10 +1,10 @@
 import java.util.*;
 import phase3.AidRecord;
-import phase1.RiskHeap;
 import city.CityGraph;
 import city.Zone;
 import phase1.SignalSimulator;
 import phase3.FairnessScorer;
+import phase1.RiskHeap;
 import phase1.SignalMonitor;
 
 public class Main {
@@ -29,10 +29,8 @@ public class Main {
         System.out.println("======================================================================");
         System.out.println("\n--- PHASE 1: Crisis Detection Started ---\n");
         SignalSimulator sim = new SignalSimulator();
-
-        sim.runSimulation(
-                "../data/mock_data.csv",
-                zones);
+        RiskHeap riskHeap = new RiskHeap();
+        sim.runSimulation("../data/mock_data.csv", zones, riskHeap);
 
         System.out.println("\n===== FINAL ZONE STATUS =====");
         for (Map.Entry<String, Zone> entry : zones.entrySet()) {
@@ -52,7 +50,7 @@ public class Main {
             System.out.println("No critical zones detected.");
 
         // ── SIGNAL MONITOR TEST ──
-        System.out.println("\n===== SIGNAL MONITOR — SLIDING WINDOW TEST =====");
+        System.out.println("\n===== SIGNAL MONITOR - SLIDING WINDOW TEST =====");
         SignalMonitor monitor = new SignalMonitor();
         monitor.initZone("A");
         double[] testValues = { 4.0, 5.0, 6.0, 7.0, 8.0, 8.5, 9.0 };
@@ -64,17 +62,17 @@ public class Main {
         }
         monitor.printWindow("A");
 
-        // ── RISK HEAP TEST ──
-        System.out.println("\n===== RISK HEAP — ZONE RANKING =====");
+        // // ── RISK HEAP TEST ── not needed since now it runs inside simulation
+        // System.out.println("\n===== RISK HEAP - ZONE RANKING =====");
 
-        RiskHeap riskHeap = new RiskHeap();
-        riskHeap.updateAll(zones);
+        // RiskHeap riskHeap = new RiskHeap();
+        // riskHeap.updateAll(zones);
 
-        System.out.println("Highest risk zone: Zone " +
-           riskHeap.getHighestRisk().zoneName +
-            " (score: " + riskHeap.getHighestRisk().riskScore + ")");
+        // System.out.println("Highest risk zone: Zone " +
+        // riskHeap.getHighestRisk().zoneName +
+        // " (score: " + riskHeap.getHighestRisk().riskScore + ")");
 
-        riskHeap.printTopZones(5);
+        // riskHeap.printTopZones(5);
 
         // aidRecord
         /*
