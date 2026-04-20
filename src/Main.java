@@ -5,6 +5,7 @@ import city.Zone;
 import phase1.SignalSimulator;
 import phase3.FairnessScorer;
 import phase3.AidDistributor;
+import phase3.HospitalAssigner;
 public class Main {
     public static void main(String[] args) {
 
@@ -176,6 +177,25 @@ distributor.runCycle(1, 2);
 distributor.runCycle(2, 2);
 distributor.runCycle(3, 2);
 distributor.printAllRecords();
+
+System.out.println("\n===== HOSPITAL ASSIGNER TEST =====");
+
+HospitalAssigner hospitalAssigner = new HospitalAssigner();
+hospitalAssigner.addHospital("City Hospital", 3);
+hospitalAssigner.addHospital("General Hospital", 5);
+hospitalAssigner.addHospital("Metro Care", 2);
+
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
 
 
    }
