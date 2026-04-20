@@ -1,5 +1,7 @@
 package phase1;
 
+import phase1.SpreadPredictor;
+import city.CityGraph;
 import phase1.RiskHeap;
 import java.io.*;
 import java.util.*;
@@ -7,7 +9,8 @@ import city.Zone;
 
 public class SignalSimulator {
 
-    public void runSimulation(String filePath, Map<String, Zone> zones, RiskHeap riskHeap) {
+    public void runSimulation(String filePath, Map<String, Zone> zones, RiskHeap riskHeap, CityGraph graph,
+            SpreadPredictor spreader) {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -81,6 +84,8 @@ public class SignalSimulator {
                             " | SOS: " + sos +
                             " | Infra: " + infra);
                     tickHadActivity = true;
+                    // trigger BFS spread prediction from this critical zone
+                    spreader.predict(zoneId, graph, zones);
                 }
                 if (!tickHadActivity) { // last tick
                     System.out.println("  [ALL CLEAR] All zones normal.");
