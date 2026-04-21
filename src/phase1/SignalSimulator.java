@@ -17,20 +17,17 @@ public class SignalSimulator {
             String line;
             int lastTick = -1;
             boolean tickHadActivity = false;
+            Set<String> criticalZonesAlerted = new HashSet<>();
+
             br.readLine(); // skip header
 
             while ((line = br.readLine()) != null) {
 
-                // Fix 1 — skip empty lines
                 line = line.trim();
-                if (line.isEmpty())
-                    continue;
+                if (line.isEmpty()) continue;
 
                 String[] data = line.split(",");
-
-                // Fix 2 — skip incomplete rows
-                if (data.length < 7)
-                    continue;
+                if (data.length < 7) continue;
 
                 int tick = Integer.parseInt(data[0].trim());
                 String zoneId = data[1].trim();
@@ -40,42 +37,30 @@ public class SignalSimulator {
                 String zoneType = data[5].trim();
                 double vulnerability = Double.parseDouble(data[6].trim());
 
-                // Print tick header when tick changes
                 if (tick != lastTick) {
-                    // if previous tick had no alerts or crisis — print ALL CLEAR
                     if (lastTick != -1 && !tickHadActivity) {
                         System.out.println("  [ALL CLEAR] All zones normal.");
                     }
                     System.out.println("\n========== TICK " + tick + " ==========");
                     lastTick = tick;
-                    tickHadActivity = false; // reset for new tick
-                    // update heap with latest risk scores
+                    tickHadActivity = false;
                     riskHeap.updateAll(zones);
-                    // print top 3 risk zones this tick
                     riskHeap.printTopZones(3);
                 }
-                tick = Integer.parseInt(data[0]);
-                environmentalSignal = Double.parseDouble(data[2]);
-                sos = Integer.parseInt(data[3]);
-                infra = Double.parseDouble(data[4]);
-                String zoneType = data[5];
-                double vulnerability = Double.parseDouble(data[6]);
-                // Get zone
+
                 Zone z = zones.get(zoneId);
                 if (z == null) {
-                    System.out.println("Zone not found: " + zoneId);
+                    System.out.println("  Zone not found: " + zoneId);
                     continue;
                 }
 
-                // Update values
                 z.environmentalSignal = environmentalSignal;
                 z.sosCount = sos;
                 z.infraStress = infra;
-                z.evaluateRisk();
                 z.zoneType = zoneType;
                 z.vulnerabilityBonus = vulnerability;
+                z.evaluateRisk();
 
-                // Print only if ALERT or CRITICAL
                 if (z.isCritical) {
                     System.out.println("  !!! CRISIS DETECTED: Zone " + zoneId +
                             " | Env: " + environmentalSignal +
@@ -84,18 +69,24 @@ public class SignalSimulator {
                             " | Risk Score: " + z.riskScore +
                             " | Type: " + zoneType);
                     tickHadActivity = true;
+
+                    // BFS spread — only trigger once per zone
+                    if (!criticalZonesAlerted.contains(zoneId)) {
+                        criticalZonesAlerted.add(zoneId);
+                        spreader.predict(zoneId, graph, zones);
+                    }
+
                 } else if (environmentalSignal > 6.0 || sos > 15 || infra > 1.8) {
                     System.out.println("  [ALERT] Zone " + zoneId +
                             " | Env: " + environmentalSignal +
                             " | SOS: " + sos +
                             " | Infra: " + infra);
                     tickHadActivity = true;
-                    // trigger BFS spread prediction from this critical zone
-                    spreader.predict(zoneId, graph, zones);
                 }
-                if (!tickHadActivity) { // last tick
-                    System.out.println("  [ALL CLEAR] All zones normal.");
-                }
+            }
+
+            if (!tickHadActivity) {
+                System.out.println("  [ALL CLEAR] All zones normal.");
             }
 
             br.close();

@@ -1,4 +1,3 @@
-
 import java.util.*;
 import phase2.AmbulanceDispatcher;
 import phase1.RiskHeap;
@@ -10,15 +9,73 @@ import phase3.FairnessScorer;
 import phase1.SignalMonitor;
 import phase1.SpreadPredictor;
 import phase2.EvacuationRouter;
-
-
 import phase3.AidDistributor;
 import phase3.HospitalAssigner;
+
 public class Main {
+
+    static Map<String, Zone> zones = new HashMap<>();
+    static CityGraph graph = new CityGraph();
+    static RiskHeap riskHeap = new RiskHeap();
+    static SpreadPredictor spreader = new SpreadPredictor();
+    static AidDistributor distributor = new AidDistributor();
+    static EvacuationRouter router = new EvacuationRouter();
+    static boolean simulationRun = false;
+
     public static void main(String[] args) {
 
-        // ── ZONES ──
-        Map<String, Zone> zones = new HashMap<>();
+        setup();
+
+        Scanner sc = new Scanner(System.in);
+        int choice = 0;
+
+        System.out.println("======================================================================");
+        System.out.println("           SMART CITY CRISIS & FAIR RESPONSE ENGINE                  ");
+        System.out.println("                     TriCoders - Buffer 7.0                          ");
+        System.out.println("======================================================================");
+
+        while (choice != 8) {
+
+            System.out.println("\n==================== MAIN MENU ====================");
+            System.out.println("  1. Run Phase 1 : Crisis Detection");
+            System.out.println("  2. View Final Zone Status");
+            System.out.println("  3. View Risk Heap :  Zone Rankings");
+            System.out.println("  4. Run Phase 2 : Evacuation Routing");
+            System.out.println("  5. Run Phase 3 : Fair Aid Distribution");
+            System.out.println("  6. Demo : Ambulance Dispatcher");
+            System.out.println("  7. Demo : Hospital Assigner");
+            System.out.println("  8. Exit");
+            System.out.println("===================================================");
+            System.out.print("Enter choice: ");
+
+            try {
+                choice = Integer.parseInt(sc.nextLine().trim());
+            } catch (Exception e) {
+                System.out.println("Invalid input. Enter a number 1-8.");
+                continue;
+            }
+
+            switch (choice) {
+                case 1: runPhase1(); break;
+                case 2: viewZoneStatus(); break;
+                case 3: viewRiskHeap(); break;
+                case 4: runPhase2(sc); break;
+                case 5: runPhase3(sc); break;
+                case 6: runAmbulance(); break;
+                case 7: runHospital(); break;
+                case 8:
+                    System.out.println("\nExiting Smart City Crisis Engine. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter 1-8.");
+            }
+        }
+
+        sc.close();
+    }
+
+    // ── SETUP — runs once at start ──
+    static void setup() {
         zones.put("A", new Zone(1, "A"));
         zones.put("B", new Zone(2, "B"));
         zones.put("C", new Zone(3, "C"));
@@ -30,97 +87,8 @@ public class Main {
         zones.put("I", new Zone(9, "I"));
         zones.put("J", new Zone(10, "J"));
 
-        System.out.println("======================================================================");
-        System.out.println("SMART CITY CRISIS ENGINE");
-        System.out.println("======================================================================");
+        for (String z : zones.keySet()) graph.addZone(z);
 
-        // ── PHASE 1: SIGNAL SIMULATION ──
-        SignalSimulator sim = new SignalSimulator();
-        RiskHeap riskHeap = new RiskHeap();
-        SpreadPredictor spreader = new SpreadPredictor();
-        CityGraph graph = new CityGraph();
-        sim.runSimulation("../data/mock_data.csv", zones, riskHeap, graph, spreader);
-        System.out.println("\n===== FINAL ZONE STATUS =====");
-        for (Zone z : zones.values()) {
-            z.printStatus();
-        }
-
-        // ── CRITICAL ZONES ──
-        System.out.println("\n===== CRITICAL ZONES =====");
-        boolean anyCritical = false;
-
-        for (Zone z : zones.values()) {
-            if (z.isCritical) {
-                System.out.println("!!! Zone " + z.zoneName +
-                        " [" + z.zoneType + "] is CRITICAL !!!");
-                anyCritical = true;
-            }
-        }
-
-        if (!anyCritical) {
-            System.out.println("⚠ No critical zones detected → forcing test case...");
-            zones.get("A").isCritical = true; // 🔥 ensures rest of program runs
-        }
-
-        // ── SIGNAL MONITOR TEST ──
-        System.out.println("\n===== SIGNAL MONITOR - SLIDING WINDOW TEST =====");
-        SignalMonitor monitor = new SignalMonitor();
-        monitor.initZone("A");
-
-        double[] testValues = { 4, 5, 6, 7, 8, 8.5, 9 };
-
-        for (double val : testValues) {
-            monitor.addReading("A", val, 5, 1.2);
-            System.out.println("Env=" + val +
-                    " | Size=" + monitor.getWindowSize("A") +
-                    " | Latest=" + monitor.getLatestEnv("A"));
-        }
-
-        // // ── RISK HEAP TEST ── not needed since now it runs inside simulation
-        // System.out.println("\n===== RISK HEAP - ZONE RANKING =====");
-
-        // RiskHeap riskHeap = new RiskHeap();
-        // riskHeap.updateAll(zones);
-
-        // System.out.println("Highest risk zone: Zone " +
-        // riskHeap.getHighestRisk().zoneName +
-        // " (score: " + riskHeap.getHighestRisk().riskScore + ")");
-
-        // riskHeap.printTopZones(5);
-
-        // aidRecord
-        /*
-         * AidRecord zoneA = new AidRecord(1, 75.5);
-         * AidRecord zoneB = new AidRecord(2, 50.0);
-         * AidRecord zoneC = new AidRecord(3, 90.2);
-         * 
-         * System.out.println("\nInitial Aid Records:");
-         * zoneA.printRecord();
-         * zoneB.printRecord();
-         * zoneC.printRecord();
-         * 
-         * zoneA.setAidReceived(5);
-         * zoneA.setTimeIgnored(2);
-         * 
-         * zoneB.setAidReceived(3);
-         * zoneB.setTimeIgnored(1);
-         * 
-         * zoneC.setAidReceived(7);
-         * zoneC.setTimeIgnored(4);
-         * 
-         * System.out.println("\nUpdated Aid Records:");
-         * zoneA.printRecord();
-         * zoneB.printRecord();
-         * zoneC.printRecord();
-         */
-        // ── PHASE 2: EVACUATION ──
-        System.out.println("\n===== EVACUATION ROUTING =====");
-
-        for (String z : zones.keySet()) {
-            graph.addZone(z);
-        }
-
-        // connections
         graph.addConnection("A", "B", 5);
         graph.addConnection("A", "C", 10);
         graph.addConnection("B", "C", 3);
@@ -132,121 +100,174 @@ public class Main {
         graph.addConnection("C", "J", 8);
         graph.addConnection("F", "G", 5);
         graph.addConnection("G", "H", 4);
+    }
 
-        EvacuationRouter router = new EvacuationRouter();
+    // ── MENU 1 — Phase 1 Crisis Detection ──
+    static void runPhase1() {
+        System.out.println("\n--- PHASE 1: Crisis Detection ---");
+        System.out.println("Reading sensor data from CSV...\n");
 
-        // run evacuation
+        SignalSimulator sim = new SignalSimulator();
+        sim.runSimulation("../data/mock_data.csv", zones, riskHeap, graph, spreader);
+        simulationRun = true;
+
+        // register zones for aid after simulation
+        distributor = new AidDistributor();
+        for (Zone z : zones.values()) {
+            distributor.registerZone(z.zoneName, z.zoneId,
+                z.getRiskScore(), z.getVulnerabilityBonus());
+        }
+
+        System.out.println("\nPhase 1 complete. Press 2 to see zone status.");
+    }
+
+    // ── MENU 2 — Zone Status ──
+    static void viewZoneStatus() {
+        if (!simulationRun) {
+            System.out.println("Run Phase 1 first (option 1).");
+            return;
+        }
+        System.out.println("\n===== FINAL ZONE STATUS =====");
+        for (Zone z : zones.values()) z.printStatus();
+
+        System.out.println("\n===== CRITICAL ZONES =====");
+        boolean any = false;
         for (Zone z : zones.values()) {
             if (z.isCritical) {
-                System.out.println("\n🚨 Crisis in Zone " + z.zoneName);
-
-                List<String> route = router.findRoute(z.zoneName, graph);
-                router.printRoute(z.zoneName, route, graph);
-
-                router.simulateCongestion(z.zoneName, "D", "H", graph);
-                break;
+                System.out.println("!!! Zone " + z.zoneName +
+                    " [" + z.zoneType + "] is CRITICAL !!!");
+                any = true;
             }
         }
+        if (!any) System.out.println("No critical zones.");
+    }
 
-        // ── PHASE 3: FAIRNESS ──
-        System.out.println("\n===== FAIRNESS SCORES =====");
+    // ── MENU 3 — Risk Heap ──
+    static void viewRiskHeap() {
+        if (!simulationRun) {
+            System.out.println("Run Phase 1 first (option 1).");
+            return;
+        }
+        System.out.println("\n===== RISK HEAP - TOP 5 ZONES =====");
+        riskHeap.updateAll(zones);
+        riskHeap.printTopZones(5);
+    }
 
-        for (Zone z : zones.values()) {
+    // ── MENU 4 — Phase 2 Evacuation ──
+    static void runPhase2(Scanner sc) {
+        if (!simulationRun) {
+            System.out.println("Run Phase 1 first (option 1).");
+            return;
+        }
 
-            AidRecord record = new AidRecord(z.zoneId, z.riskScore);
+        System.out.println("\n--- PHASE 2: Evacuation Routing ---");
+        System.out.println("\nCity Road Network:");
+        graph.printGraph();
 
-            record.setVulnerabilityBonus(z.vulnerabilityBonus);
-            record.setAidReceived((int) (Math.random() * 5));
-            record.setTimeIgnored((int) (Math.random() * 6));
+        System.out.print("\nEnter zone name to evacuate from (e.g. A): ");
+        String zone = sc.nextLine().trim().toUpperCase();
 
-            double neglect = 1.0 + z.riskScore * 0.3;
-            if (z.isCritical) {
-                neglect += 0.5;
+        if (!zones.containsKey(zone)) {
+            System.out.println("Zone not found.");
+            return;
+        }
+
+        System.out.println("\nFinding evacuation route from Zone " + zone + "...");
+        List<String> route = router.findRoute(zone, graph);
+        router.printRoute(zone, route, graph);
+
+        System.out.print("\nSimulate road congestion? (y/n): ");
+        String ans = sc.nextLine().trim().toLowerCase();
+        if (ans.equals("y")) {
+            System.out.print("Enter road to congest (e.g. D H): ");
+            String[] roads = sc.nextLine().trim().toUpperCase().split(" ");
+            if (roads.length == 2) {
+                router.simulateCongestion(zone, roads[0], roads[1], graph);
+            } else {
+                System.out.println("Invalid input. Enter two zone names separated by space.");
             }
+        }
+    }
 
-
-            record.setNeglectMultiplier(neglect);
-
-            double score = FairnessScorer.computeScore(record);
-
-            System.out.printf("%s: priority score = %.2f\n",
-                    z.zoneName, score);
+    // ── MENU 5 — Phase 3 Aid Distribution ──
+    static void runPhase3(Scanner sc) {
+        if (!simulationRun) {
+            System.out.println("Run Phase 1 first (option 1).");
+            return;
         }
 
-        // ── SPREAD PREDICTION ──
-        System.out.println("\n===== SPREAD PREDICTION =====");
+        System.out.println("\n--- PHASE 3: Fair Aid Distribution ---");
+        System.out.print("How many aid cycles to run? (1-5): ");
 
-        SpreadPredictor predictor = new SpreadPredictor();
-        boolean predicted = false;
-
-        for (Zone z : zones.values()) {
-            if (z.isCritical) {
-                System.out.println("Predicting spread from Zone " + z.zoneName);
-                predictor.predict(z.zoneName, graph, zones);
-                predicted = true;
-                break;
-            }
+        int cycles = 3;
+        try {
+            cycles = Integer.parseInt(sc.nextLine().trim());
+            if (cycles < 1 || cycles > 5) cycles = 3;
+        } catch (Exception e) {
+            cycles = 3;
         }
 
-        if (!predicted) {
-            System.out.println("⚠ No prediction executed.");
+        System.out.print("How many aid units per cycle? (1-5): ");
+        int units = 2;
+        try {
+            units = Integer.parseInt(sc.nextLine().trim());
+            if (units < 1 || units > 5) units = 2;
+        } catch (Exception e) {
+            units = 2;
         }
-          // ── AID DISTRIBUTOR TEST ──
-System.out.println("\n===== AID DISTRIBUTOR — 3 CYCLES =====");
 
-AidDistributor distributor = new AidDistributor();
+        for (int i = 1; i <= cycles; i++) {
+            distributor.runCycle(i, units);
+        }
 
-// Register zones with damage level from actual simulation
-// vulnerabilityBonus comes from CSV
-distributor.registerZone("A", 1, zones.get("A").getRiskScore(),
-    zones.get("A").getVulnerabilityBonus());
-distributor.registerZone("B", 2, zones.get("B").getRiskScore(),
-    zones.get("B").getVulnerabilityBonus());
-distributor.registerZone("C", 3, zones.get("C").getRiskScore(),
-    zones.get("C").getVulnerabilityBonus());
-distributor.registerZone("D", 4, zones.get("D").getRiskScore(),
-    zones.get("D").getVulnerabilityBonus());
-distributor.registerZone("E", 5, zones.get("E").getRiskScore(),
-    zones.get("E").getVulnerabilityBonus());
-// Run 3 aid cycles — 2 units per cycle
-distributor.runCycle(1, 2);
-distributor.runCycle(2, 2);
-distributor.runCycle(3, 2);
-distributor.printAllRecords();
+        distributor.printAllRecords();
+    }
 
-System.out.println("\n===== HOSPITAL ASSIGNER TEST =====");
+    // ── MENU 6 — Ambulance Dispatcher ──
+    static void runAmbulance() {
+        System.out.println("\n--- AMBULANCE DISPATCHER (Future Scope Demo) ---");
+        System.out.println("Dispatching by severity score — highest severity first.\n");
 
-HospitalAssigner hospitalAssigner = new HospitalAssigner();
-hospitalAssigner.addHospital("City Hospital", 3);
-hospitalAssigner.addHospital("General Hospital", 5);
-hospitalAssigner.addHospital("Metro Care", 2);
+        AmbulanceDispatcher dispatcher = new AmbulanceDispatcher();
+        dispatcher.addCall(1, 5);  // Zone 1, severity 5
+        dispatcher.addCall(3, 9);  // Zone 3, severity 9 — highest
+        dispatcher.addCall(2, 7);  // Zone 2, severity 7
 
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
-hospitalAssigner.assignPatient();
+        System.out.println("3 emergency calls received:");
+        System.out.println("  Zone 1 — severity 5");
+        System.out.println("  Zone 3 — severity 9");
+        System.out.println("  Zone 2 — severity 7");
+        System.out.println("\nDispatching in order:");
 
-System.out.println("\n===== AMBULANCE DISPATCHER TEST =====");
+        dispatcher.dispatchNext();
+        dispatcher.dispatchNext();
+        dispatcher.dispatchNext();
 
-AmbulanceDispatcher ambulanceDispatcher = new AmbulanceDispatcher();
-ambulanceDispatcher.addCall(2, 5);
-ambulanceDispatcher.addCall(7, 9);
-ambulanceDispatcher.addCall(4, 7);
+        System.out.println("\nNote: Full integration with live graph routing is the next development phase.");
+    }
 
-ambulanceDispatcher.dispatchNext();
-ambulanceDispatcher.dispatchNext();
-ambulanceDispatcher.dispatchNext();
-ambulanceDispatcher.dispatchNext();
+    // ── MENU 7 — Hospital Assigner ──
+    static void runHospital() {
+        System.out.println("\n--- HOSPITAL ASSIGNER (Future Scope Demo) ---");
+        System.out.println("Assigning patients to least loaded hospital first.\n");
 
-   }
- 
+        HospitalAssigner assigner = new HospitalAssigner();
+        assigner.addHospital("City Hospital", 3);
+        assigner.addHospital("General Hospital", 5);
+        assigner.addHospital("Metro Care", 2);
 
+        System.out.println("3 hospitals registered:");
+        System.out.println("  City Hospital   — capacity 3");
+        System.out.println("  General Hospital — capacity 5");
+        System.out.println("  Metro Care       — capacity 2");
+        System.out.println("\nAssigning 5 patients:");
 
+        assigner.assignPatient();
+        assigner.assignPatient();
+        assigner.assignPatient();
+        assigner.assignPatient();
+        assigner.assignPatient();
+
+        System.out.println("\nNote: Full integration with ambulance routing is the next development phase.");
+    }
 }

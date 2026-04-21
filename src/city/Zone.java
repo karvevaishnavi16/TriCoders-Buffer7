@@ -77,6 +77,7 @@ public class Zone {
         if(environmentalSignal > 7.0)
         {
             abnormalCount++;
+        }
         if (sosCount > 30)
             abnormalCount++;
         if (infraStress > 2.0)
