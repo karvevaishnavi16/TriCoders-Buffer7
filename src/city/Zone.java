@@ -69,8 +69,19 @@ public class Zone {
     public void setCritical(boolean critical) {
         this.isCritical = critical;
     }
-    public void evaluateRisk() {
-        int flagCount = 0;
+    public void evaluateRisk()
+    {
+         int flagCount=0;
+        int abnormalCount=0;
+        // Check environmental condition
+        if(environmentalSignal > 7.0)
+        {
+            abnormalCount++;
+        }
+        if (sosCount > 30)
+            abnormalCount++;
+        if (infraStress > 2.0)
+            abnormalCount++;
 
         if (environmentalSignal > 7.0) {
             flagCount++;
