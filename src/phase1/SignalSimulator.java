@@ -54,12 +54,7 @@ public class SignalSimulator {
                     // print top 3 risk zones this tick
                     riskHeap.printTopZones(3);
                 }
-                tick = Integer.parseInt(data[0]);
-                environmentalSignal = Double.parseDouble(data[2]);
-                sos = Integer.parseInt(data[3]);
-                infra = Double.parseDouble(data[4]);
-                String zoneType = data[5];
-                double vulnerability = Double.parseDouble(data[6]);
+
                 // Get zone
                 Zone z = zones.get(zoneId);
                 if (z == null) {
@@ -93,9 +88,10 @@ public class SignalSimulator {
                     // trigger BFS spread prediction from this critical zone
                     spreader.predict(zoneId, graph, zones);
                 }
-                if (!tickHadActivity) { // last tick
-                    System.out.println("  [ALL CLEAR] All zones normal.");
-                }
+            }
+
+            if (lastTick != -1 && !tickHadActivity) {
+                System.out.println("  [ALL CLEAR] All zones normal.");
             }
 
             br.close();

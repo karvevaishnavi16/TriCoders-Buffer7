@@ -46,6 +46,10 @@ public double getDamageLevel() {
         this.aidReceived = aidReceived;
     }
 
+    public void setTimeIgnored(int timeIgnored) {
+        this.timeIgnored = timeIgnored;
+    }
+
 public void setVulnerabilityBonus(double vulnerabilityBonus) {
     this.vulnerabilityBonus = vulnerabilityBonus;
 }
