@@ -5,9 +5,18 @@ import java.util.*;
 public class CityGraph {
 
     Map<String, List<String[]>> adjList;
+    
 
     public CityGraph() {
         adjList = new HashMap<>();
+    }
+
+    public Set<String> getAllZones() {
+        return adjList.keySet();
+    }
+
+    public Map<String, List<String[]>> getAdjList() {
+        return adjList;
     }
 
     public void addZone(String zone) {
@@ -15,8 +24,8 @@ public class CityGraph {
     }
 
     public void addConnection(String z1, String z2, int weight) {
-        adjList.get(z1).add(new String[]{z2, String.valueOf(weight)});
-        adjList.get(z2).add(new String[]{z1, String.valueOf(weight)});
+        adjList.get(z1).add(new String[] { z2, String.valueOf(weight) });
+        adjList.get(z2).add(new String[] { z1, String.valueOf(weight) });
     }
 
     public List<String> getNeighbors(String zone) {
@@ -29,17 +38,24 @@ public class CityGraph {
 
     public int getWeight(String z1, String z2) {
         for (String[] entry : adjList.getOrDefault(z1, new ArrayList<>())) {
-            if (entry[0].equals(z2)) return Integer.parseInt(entry[1]);
+            if (entry[0].equals(z2))
+                return Integer.parseInt(entry[1]);
         }
         return Integer.MAX_VALUE;
     }
 
     public void updateWeight(String z1, String z2, int newWeight) {
         for (String[] entry : adjList.getOrDefault(z1, new ArrayList<>())) {
-            if (entry[0].equals(z2)) { entry[1] = String.valueOf(newWeight); break; }
+            if (entry[0].equals(z2)) {
+                entry[1] = String.valueOf(newWeight);
+                break;
+            }
         }
         for (String[] entry : adjList.getOrDefault(z2, new ArrayList<>())) {
-            if (entry[0].equals(z1)) { entry[1] = String.valueOf(newWeight); break; }
+            if (entry[0].equals(z1)) {
+                entry[1] = String.valueOf(newWeight);
+                break;
+            }
         }
     }
 
@@ -55,8 +71,7 @@ public class CityGraph {
 
         // int[] = {distance, zoneHashCode} — correct Dijkstra approach
         PriorityQueue<String> pq = new PriorityQueue<>(
-            (a, b) -> dist.get(a) - dist.get(b)
-        );
+                (a, b) -> dist.get(a) - dist.get(b));
         pq.add(start);
 
         while (!pq.isEmpty()) {
