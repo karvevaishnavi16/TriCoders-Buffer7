@@ -1,4 +1,5 @@
 import java.util.*;
+import phase2.AmbulanceDispatcher;
 import phase3.AidRecord;
 import city.CityGraph;
 import city.Zone;
@@ -6,6 +7,8 @@ import phase1.SignalSimulator;
 import phase3.FairnessScorer;
 import phase1.SignalMonitor;
 
+import phase3.AidDistributor;
+import phase3.HospitalAssigner;
 public class Main {
     public static void main(String[] args) {
 
@@ -179,6 +182,7 @@ public class Main {
                 neglect += 0.5;
             }
 
+
             record.setNeglectMultiplier(neglect);
 
             // 🔹 Compute score
@@ -187,5 +191,62 @@ public class Main {
             // 🔹 Print
             FairnessScorer.printScore(z.getZoneName(), score);
         }
-    }
+          // ── AID DISTRIBUTOR TEST ──
+System.out.println("\n===== AID DISTRIBUTOR — 3 CYCLES =====");
+
+AidDistributor distributor = new AidDistributor();
+
+// Register zones with damage level from actual simulation
+// vulnerabilityBonus comes from CSV
+distributor.registerZone("A", 1, zones.get("A").getRiskScore(),
+    zones.get("A").getVulnerabilityBonus());
+distributor.registerZone("B", 2, zones.get("B").getRiskScore(),
+    zones.get("B").getVulnerabilityBonus());
+distributor.registerZone("C", 3, zones.get("C").getRiskScore(),
+    zones.get("C").getVulnerabilityBonus());
+distributor.registerZone("D", 4, zones.get("D").getRiskScore(),
+    zones.get("D").getVulnerabilityBonus());
+distributor.registerZone("E", 5, zones.get("E").getRiskScore(),
+    zones.get("E").getVulnerabilityBonus());
+// Run 3 aid cycles — 2 units per cycle
+distributor.runCycle(1, 2);
+distributor.runCycle(2, 2);
+distributor.runCycle(3, 2);
+distributor.printAllRecords();
+
+System.out.println("\n===== HOSPITAL ASSIGNER TEST =====");
+
+HospitalAssigner hospitalAssigner = new HospitalAssigner();
+hospitalAssigner.addHospital("City Hospital", 3);
+hospitalAssigner.addHospital("General Hospital", 5);
+hospitalAssigner.addHospital("Metro Care", 2);
+
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+hospitalAssigner.assignPatient();
+
+System.out.println("\n===== AMBULANCE DISPATCHER TEST =====");
+
+AmbulanceDispatcher ambulanceDispatcher = new AmbulanceDispatcher();
+ambulanceDispatcher.addCall(2, 5);
+ambulanceDispatcher.addCall(7, 9);
+ambulanceDispatcher.addCall(4, 7);
+
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
+ambulanceDispatcher.dispatchNext();
+
+   }
+ 
+
+
 }

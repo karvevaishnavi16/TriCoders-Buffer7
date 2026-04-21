@@ -46,6 +46,12 @@ public class SignalSimulator {
                     lastTick = tick;
                     tickHadActivity = false; // reset for new tick
                 }
+                tick = Integer.parseInt(data[0]);
+                environmentalSignal = Double.parseDouble(data[2]);
+                sos = Integer.parseInt(data[3]);
+                infra = Double.parseDouble(data[4]);
+                String zoneType = data[5];
+                double vulnerability = Double.parseDouble(data[6]);
                 // Get zone
                 Zone z = zones.get(zoneId);
                 if (z == null) {
