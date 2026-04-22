@@ -12,7 +12,7 @@ The system is organized as a menu-based console application with three core phas
 - `Demo` - Ambulance Dispatcher
 - `Demo` - Hospital Assigner
 
-## VIDEO LINK : https://canva.link/d1dbgm0ioocgt3c
+## VIDEO LINK : https://canva.link/maeiuwc37ykr5d9
 
 ## Project Description
 
