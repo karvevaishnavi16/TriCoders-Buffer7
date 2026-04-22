@@ -12,6 +12,8 @@ The system is organized as a menu-based console application with three core phas
 - `Demo` - Ambulance Dispatcher
 - `Demo` - Hospital Assigner
 
+## VIDEO LINK : https://canva.link/d1dbgm0ioocgt3c
+
 ## Project Description
 
 This project models a city as interconnected zones and simulates how authorities could respond during an urban emergency.
